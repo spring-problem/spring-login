@@ -1,4 +1,6 @@
 spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
   jpa:
     #    show-sql: true
     properties:
@@ -6,7 +8,7 @@ spring:
         format_sql: true
   h2:
     console:
-      enabled: false
+      enabled: true
 logging:
   level:
     org.hibernate.SQL: debug
