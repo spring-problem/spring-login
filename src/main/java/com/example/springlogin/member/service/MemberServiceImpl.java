@@ -16,12 +16,10 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     public void join(JoinParam param){
-        try{
-            Member tmpMember = memberRepository.findByEmail(param.getEmail());
-            if(tmpMember != null) new Exception("이미 존재하는 이메일입니다.");
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+
+        Member tmpMember = memberRepository.findByEmail(param.getEmail());
+        if(tmpMember != null) throw new RuntimeException("이미 존재하는 이메일입니다.");
+
         //없을 경우 Member에 member 등록
         Member member = new Member(param.getEmail(), param.getPassword());
         memberRepository.save(member);
