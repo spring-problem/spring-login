@@ -9,12 +9,21 @@ import java.util.List;
 
 @Service
 public class MemberServiceImpl implements MemberService {
-    @Autowired
-    MemberRepository memberRepository;
+    final MemberRepository memberRepository;
+
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     public boolean signUp(signUpParam param) {
         Member member = new Member(param.getEmail(), param.getPassword());
+
+        List<Member> list = memberRepository.findAll();
+        for (Member tmp : list) {
+            if(tmp.equals(member))
+                return false;
+        }
 
         memberRepository.save(member);
         return true;
@@ -27,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
         List<Member> list = memberRepository.findAll();
         for (Member tmp : list) {
             if(tmp.equals(member))
-                return member.getEmail();
+                return param.getEmail();
         }
 
         return null;
