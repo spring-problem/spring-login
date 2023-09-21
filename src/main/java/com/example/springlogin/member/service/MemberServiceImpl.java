@@ -5,33 +5,32 @@ import com.example.springlogin.member.param.JoinParam;
 import com.example.springlogin.member.repository.MemberRepository;
 import com.example.springlogin.member.request.JoinRequest;
 import com.example.springlogin.member.request.LoginRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    public boolean join(JoinRequest joinRequest){
-        JoinParam param = new JoinParam();
-        param.setEmail(joinRequest.getEmail());
-        param.setPassword(joinRequest.getEmail());
-        Member tmpMember = memberRepository.findByEmail(param.getEmail());
-        if(tmpMember != null) return false; //같은 이메일로 가입한 사람이 있을 경우 return false;
-
+    public void join(JoinParam param){
+        try{
+            Member tmpMember = memberRepository.findByEmail(param.getEmail());
+            if(tmpMember != null) new Exception("이미 존재하는 이메일입니다.");
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
         //없을 경우 Member에 member 등록
-        Member member = new Member(joinRequest.getEmail(), joinRequest.getPassword());
+        Member member = new Member(param.getEmail(), param.getPassword());
         memberRepository.save(member);
-        return true;
     }
 
-    public boolean login(LoginRequest loginRequest){
+    public Member login(LoginRequest loginRequest){
         //이메일과 password로 member찾기
         Member member = memberRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
-        if(member == null)  return false; //없으면 false
-        else return true; //있으면 true
-
+        if(member == null)  return null; //없으면 null
+        else return member; //있으면 member 리턴
     }
 }
