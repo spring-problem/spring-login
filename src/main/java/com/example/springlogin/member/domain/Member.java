@@ -22,4 +22,7 @@ public class Member {
         this.email = email;
         this.password = password;
     }
+    public String getEmail() {
+        return this.email;
+    }
 }
