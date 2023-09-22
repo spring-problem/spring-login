@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
@@ -27,8 +29,8 @@ public class MemberServiceImpl implements MemberService {
 
     public Member login(LoginRequest loginRequest){
         //이메일과 password로 member찾기
-        Member member = memberRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
-        if(member == null)  return null; //없으면 null
-        else return member; //있으면 member 리턴
+        Optional<Member> member = Optional.ofNullable(memberRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword()));
+        if(member.isPresent())  return null; //없으면 null
+        else return member.get(); //있으면 member 리턴
     }
 }
