@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+</head>
+<body>
+
+<ul>
+    <li>
+        로그인 여부 :
+        <ul>
+            <li>
+                쿠키 : [[${session.loginByCookie}]]
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a th:href="@{/login}">로그인 페이지</a>
+    </li>
+    <li>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">로그아웃</button>
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>
