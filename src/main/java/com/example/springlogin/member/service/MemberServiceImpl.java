@@ -3,10 +3,8 @@ package com.example.springlogin.member.service;
 import com.example.springlogin.member.domain.Member;
 import com.example.springlogin.member.param.JoinParam;
 import com.example.springlogin.member.repository.MemberRepository;
-import com.example.springlogin.member.request.JoinRequest;
-import com.example.springlogin.member.request.LoginRequest;
+import com.example.springlogin.member.param.LoginParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,7 +25,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    public Member login(LoginRequest loginRequest){
+    public Member login(LoginParam loginRequest){
         //이메일과 password로 member찾기
         Optional<Member> member = Optional.ofNullable(memberRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword()));
         if(member.isPresent())  return null; //없으면 null
