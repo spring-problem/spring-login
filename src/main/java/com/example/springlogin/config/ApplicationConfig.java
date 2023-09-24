@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConfig {
 
-    @Bean
-    MemberController memberController() {
-        return new MemberCookieController();
-    }
+//    @Bean
+//    MemberController memberController() {
+//        return new MemberController();
+//    }
 
 }
