@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Login page</title>
 </head>
 <body>
 <form th:action="@{/login}" th:method="post" th:object="${loginRequest}">
     <div>
         <label th:for="email">이메일</label>
-        <input th:field="*{email}" type="text">
+        <input type="email" id="email" name="email" required autofocus/><br/>
     </div>
     <div>
         <label th:for="password">비밀번호</label>
-        <input th:field="*{password}" name="" type="text">
+        <input type="password" id="password" name="password" required/><br/>
     </div>
     <button type="submit">로그인</button>
 </form>
