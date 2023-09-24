@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Homepage</title>
 </head>
 <body>
 
 <ul>
     <li>
-        로그인 여부 :
+        <h4 class="mb-3" th:text="|로그인: ${email}|"></h4>
         <ul>
             <li>
                 쿠키 : [[${loginByCookie}]]
