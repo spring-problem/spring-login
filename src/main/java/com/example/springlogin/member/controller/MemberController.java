@@ -1,5 +1,6 @@
 package com.example.springlogin.member.controller;
 
+import com.example.springlogin.member.controller.request.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ public interface MemberController {
     String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model);
 
     @PostMapping("/login")
-    String login(HttpServletRequest request, HttpServletResponse response);
+    String login(HttpServletRequest request, HttpServletResponse response, LoginRequest loginRequest);
 
     @PostMapping("/logout")
     String logout(HttpServletRequest request, HttpServletResponse response);
