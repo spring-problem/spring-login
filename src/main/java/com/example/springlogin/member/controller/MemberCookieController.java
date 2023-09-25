@@ -6,20 +6,18 @@ import com.example.springlogin.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@RequiredArgsConstructor
-@Configuration
+@Component
 public class MemberCookieController implements MemberController {
 
-
-    private final MemberService memberService;
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping("/")
     public String getHome() {
