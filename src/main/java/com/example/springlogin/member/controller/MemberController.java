@@ -25,7 +25,7 @@ public interface MemberController {
     String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model);
 
     @PostMapping("/login")
-    String login(@ModelAttribute JoinRequest joinRequest, HttpServletRequest request, HttpServletResponse response, Model model);
+    String login(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response, Model model);
 
     @PostMapping("/logout")
     String logout(HttpServletRequest request, HttpServletResponse response);
