@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+
+import java.util.Optional;
 
 
 public class MemberCookieController implements MemberController {
@@ -17,59 +20,45 @@ public class MemberCookieController implements MemberController {
     private MemberService service;
 
     @Override
-    public String getIndexPage(HttpServletRequest request, HttpServletResponse response) {
-        return "/index";
-    }
-
-    @Override
-    public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue(value = "loginByCookie", required = false) boolean loginByCookie) {
         model.addAttribute("loginRequest", new LoginRequest());
-        if(request.getAttribute("loginByCookie") != null){
-            boolean isLogin = (boolean) request.getAttribute("loginByCookie");
-            if(isLogin){
-                return "/index";
-            }
+
+        if(loginByCookie == true){
+            return "/";
         }
         return "/login";
     }
 
     @Override
-    public String login(HttpServletRequest request, HttpServletResponse response, LoginRequest loginRequest) {
+    public String login(HttpServletRequest request, HttpServletResponse response, LoginRequest loginRequest, Model model) {
         request.getParameter("loginRequest");
         LoginParam param = LoginParam.builder()
                 .email(loginRequest.getEmail())
                 .password(loginRequest.getPassword())
                 .build();
 
-        try{
-            Member member = service.login(param);
-            if(member != null){
-                HttpSession session = request.getSession();
-                Cookie cookie = new Cookie("loginByCookie" , "true");
-                cookie.setMaxAge(60*60*24*400);
-                cookie.setPath(request.getContextPath());
-                response.addCookie(cookie);
-                return "/index";
-            }
-        }catch (RuntimeException e){
-            System.out.println(e.getMessage());
+
+        Member member = service.login(param);
+        if(member != null){
+            HttpSession session = request.getSession();
+            session.setAttribute("loginByCookie", loginRequest.getEmail());
+            Cookie cookie = new Cookie("loginByCookie", "true");
+            cookie.setMaxAge(60*60*24*400);
+            cookie.setPath(request.getContextPath());
+            response.addCookie(cookie);
+            return "redirect:/";
         }
 
         return "/login";
     }
 
     @Override
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        if(cookies != null){
-            for (Cookie cookie:cookies) {
-                if(cookie.getName().equals("loginByCookie")){
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-                    break;
-                }
-            }
-        }
-        return "/index";
+    public String logout(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Cookie cookie = new Cookie("loginByCookie", "false");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        HttpSession session = request.getSession();
+        session.invalidate();
+        return "redirect:/";
     }
 }

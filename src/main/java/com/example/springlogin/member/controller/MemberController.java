@@ -22,11 +22,11 @@ public interface MemberController {
     }
 
     @GetMapping("/login")
-    String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model);
+    String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue(value = "loginByCookie", required = false) boolean loginByCookie);
 
     @PostMapping("/login")
-    String login(HttpServletRequest request, HttpServletResponse response, LoginRequest loginRequest);
+    String login(HttpServletRequest request, HttpServletResponse response, LoginRequest loginRequest, Model model);
 
     @PostMapping("/logout")
-    String logout(HttpServletRequest request, HttpServletResponse response);
+    String logout(HttpServletRequest request, HttpServletResponse response, Model model);
 }
