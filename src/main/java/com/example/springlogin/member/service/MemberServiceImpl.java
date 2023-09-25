@@ -28,7 +28,7 @@ public class MemberServiceImpl implements MemberService {
     public Member login(LoginParam loginRequest){
         //이메일과 password로 member찾기
         Optional<Member> member = Optional.ofNullable(memberRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword()));
-        if(member.isPresent())  return null; //없으면 null
-        else return member.get(); //있으면 member 리턴
+        if(member.isPresent())  return member.get(); //있으면 member retrun
+        else return null; //없으면 null
     }
 }
