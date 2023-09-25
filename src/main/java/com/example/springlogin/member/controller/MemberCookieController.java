@@ -31,11 +31,11 @@ public class MemberCookieController implements MemberController {
 
     @Override
     @PostMapping("login")
-    public String login(@ModelAttribute JoinRequest joinRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String login(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
         // service에 보낼 객체를 만들어서 보내준다
         LoginParam loginParam = LoginParam.builder()
-                .email(joinRequest.getEmail())
-                .password(joinRequest.getPassword())
+                .email(loginRequest.getEmail())
+                .password(loginRequest.getPassword())
                 .build();
 
         Member member = memberService.login(loginParam);
