@@ -40,13 +40,14 @@ public class MemberCookieController implements MemberController {
                 .email(loginRequest.getEmail())
                 .password(loginRequest.getPassword())
                 .build();
-        System.out.println(param.toString());
+
         try{
             Member member = service.login(param);
             if(member != null){
                 HttpSession session = request.getSession();
                 Cookie cookie = new Cookie("loginByCookie" , "true");
                 cookie.setMaxAge(60*60*24*400);
+                cookie.setPath(request.getContextPath());
                 response.addCookie(cookie);
                 return "/index";
             }
