@@ -14,3 +14,8 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.security: debug
 
+#url에 자꾸 jsession값이 출력되어서 넣었음.
+server:
+  servlet:
+    session:
+      tracking-modes: cookie

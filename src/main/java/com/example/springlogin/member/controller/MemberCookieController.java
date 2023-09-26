@@ -8,24 +8,35 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 
 import java.util.Optional;
 
-
+@RequiredArgsConstructor
 public class MemberCookieController implements MemberController {
-    @Autowired
-    private MemberService service;
+
+    private final MemberService service;
+
+//    public MemberCookieController(MemberService service){
+//        this.service = service;
+//    } =>@RequiredArgsConstructor 로 대체 가능
 
     @Override
-    public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue(value = "loginByCookie", required = false) boolean loginByCookie) {
-        model.addAttribute("loginRequest", new LoginRequest());
+    public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
 
-        if(loginByCookie == true){
-            return "/";
+        model.addAttribute("loginRequest", new LoginRequest());
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null){
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals("loginByCookie")){
+                    return "/";
+                }
+            }
         }
+
         return "/login";
     }
 
@@ -48,8 +59,7 @@ public class MemberCookieController implements MemberController {
             response.addCookie(cookie);
             return "redirect:/";
         }
-
-        return "/login";
+        return "redirect:/login";
     }
 
     @Override

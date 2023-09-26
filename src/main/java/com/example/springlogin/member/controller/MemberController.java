@@ -22,7 +22,7 @@ public interface MemberController {
     }
 
     @GetMapping("/login")
-    String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue(value = "loginByCookie", required = false) boolean loginByCookie);
+    String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model);
 
     @PostMapping("/login")
     String login(HttpServletRequest request, HttpServletResponse response, LoginRequest loginRequest, Model model);
