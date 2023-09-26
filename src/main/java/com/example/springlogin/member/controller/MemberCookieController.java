@@ -61,11 +61,14 @@ public class MemberCookieController implements MemberController {
             Cookie cookie = new Cookie("loginByCookie", member.getEmail());
             // 쿠키 시간 디폴트로 설정
             response.addCookie(cookie);
+            // 로그인 완료
+            return "/index";
         }
-
+        // 로그인이 실패한 경우
+        return "/login";
         //model.addAttribute("loginByCookie", member.getEmail());
 
-        return "/index";
+
     }
 
     @Override
