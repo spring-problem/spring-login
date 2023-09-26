@@ -6,19 +6,18 @@ import com.example.springlogin.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.ComponentScan;
+import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberCookieController implements MemberController {
 
 //    @Autowired // 필드주입 방법
 //    private MemberService memberService;
-    MemberService memberService;
+    private final MemberService memberService;
 //    public MemberCookieController(MemberService memberService) {
 //        this.memberService = memberService;
 //    }
@@ -31,7 +30,7 @@ public class MemberCookieController implements MemberController {
             for(Cookie cookie : cookies) {
                 if("loginByCookie".equals(cookie.getName())) {
                     // 로그인된 상태라면 로그인 페이지로 이동하는게 아닌 다시 원래의 login으로 이동..
-                    return "/index";
+                    return "redirect:/";
                 }
             }
         }
@@ -65,10 +64,10 @@ public class MemberCookieController implements MemberController {
             // 쿠키 시간 디폴트로 설정
             response.addCookie(cookie);
             // 로그인 완료
-            return "/index";
+            return "redirect:/";
         }
         // 로그인이 실패한 경우
-        return "/login";
+        return "redirect:/login";
         //model.addAttribute("loginByCookie", member.getEmail());
 
 
@@ -83,6 +82,6 @@ public class MemberCookieController implements MemberController {
         cookie.setMaxAge(0);
         response.addCookie(cookie);
 
-        return "index";
+        return "redirect:/";
     }
 }
