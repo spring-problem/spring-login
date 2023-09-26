@@ -7,13 +7,9 @@ import com.example.springlogin.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MemberCookieController implements MemberController {
@@ -51,8 +47,6 @@ public class MemberCookieController implements MemberController {
 
         Member member = service.login(param);
         if(member != null){
-            HttpSession session = request.getSession();
-            session.setAttribute("loginByCookie", loginRequest.getEmail());
             Cookie cookie = new Cookie("loginByCookie", "true");
             cookie.setMaxAge(60*60*24*400);
             cookie.setPath(request.getContextPath());
@@ -67,8 +61,6 @@ public class MemberCookieController implements MemberController {
         Cookie cookie = new Cookie("loginByCookie", "false");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-        HttpSession session = request.getSession();
-        session.invalidate();
         return "redirect:/";
     }
 }
