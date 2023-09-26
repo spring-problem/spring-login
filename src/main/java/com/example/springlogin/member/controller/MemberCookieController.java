@@ -6,19 +6,22 @@ import com.example.springlogin.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@ComponentScan
+@AllArgsConstructor
 public class MemberCookieController implements MemberController {
 
-    @Autowired
-    private MemberService memberService;
-
+//    @Autowired // 필드주입 방법
+//    private MemberService memberService;
+    MemberService memberService;
+//    public MemberCookieController(MemberService memberService) {
+//        this.memberService = memberService;
+//    }
     @Override
     @GetMapping("login")
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
