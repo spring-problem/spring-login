@@ -24,7 +24,6 @@ public class MemberCookieController implements MemberController {
 //        this.memberService = memberService;
 //    }
     @Override
-    @GetMapping("login")
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         Cookie[] cookies = request.getCookies();
 
@@ -51,7 +50,6 @@ public class MemberCookieController implements MemberController {
 //    }
 
     @Override
-    @PostMapping("login")
     public String login(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
         // service에 보낼 객체를 만들어서 보내준다
         LoginParam loginParam = LoginParam.builder()
@@ -77,7 +75,6 @@ public class MemberCookieController implements MemberController {
     }
 
     @Override
-    @PostMapping("logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         // 쿠키 시간을 만료시켜서 쿠키를 제거한다
         // index 파일로 매핑되고 view에 들어가기 전에 컨트롤러에서 쿠키를 확인하고 주입해주기에 여기서는 쿠키 만료만 진행
