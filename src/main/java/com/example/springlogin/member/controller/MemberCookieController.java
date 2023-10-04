@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 public class MemberCookieController implements MemberController {
 
@@ -57,10 +59,11 @@ public class MemberCookieController implements MemberController {
                 .password(loginRequest.getPassword())
                 .build();
 
-        Member member = memberService.login(loginParam);
+        // Optional 로 받아오는 것은 null 값을 반드시 확인해야 하기때문에 확인 측면에서 좋다
+        Optional<Member> member = Optional.ofNullable(memberService.login(loginParam));
         // 로그인에 성공 했다면 !
-        if (member != null) {
-            Cookie cookie = new Cookie("loginByCookie", member.getEmail());
+        if (member.isPresent()) {
+            Cookie cookie = new Cookie("loginByCookie", member.get().getEmail());
             // 쿠키 시간 디폴트로 설정
             response.addCookie(cookie);
             // 로그인 완료
