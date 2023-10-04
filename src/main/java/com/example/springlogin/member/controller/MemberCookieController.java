@@ -58,7 +58,7 @@ public class MemberCookieController implements MemberController {
                 .build();
 
         // Optional 로 받아오는 것은 null 값을 반드시 확인해야 하기때문에 확인 측면에서 좋다
-        Optional<Member> member = Optional.ofNullable(memberService.login(loginParam));
+        Optional<Member> member = memberService.login(loginParam);
         // 로그인에 성공 했다면 !
         if (member.isPresent()) {
             Cookie cookie = new Cookie("loginByCookie", member.get().getEmail());
