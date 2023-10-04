@@ -23,8 +23,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public Optional<Member> login(LoginParam param){
-        Optional<Member> member = memberRepository.findByEmailAndPassword(param.getEmail(), param.getPassword());
-        if(!member.isPresent())  return null;
-        else return Optional.ofNullable(member.get());
+        return memberRepository.findByEmailAndPassword(param.getEmail(), param.getPassword());
     }
 }
