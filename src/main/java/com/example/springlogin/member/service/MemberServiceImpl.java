@@ -18,15 +18,13 @@ public class MemberServiceImpl implements MemberService {
         Member tmpMember = memberRepository.findByEmail(param.getEmail());
         if(tmpMember != null) throw new RuntimeException("이미 존재하는 이메일입니다.");
 
-        //없을 경우 Member에 member 등록
         Member member = new Member(param.getEmail(), param.getPassword());
         memberRepository.save(member);
     }
 
     public Optional<Member> login(LoginParam param){
-        //이메일과 password로 member찾기
         Optional<Member> member = Optional.ofNullable(memberRepository.findByEmailAndPassword(param.getEmail(), param.getPassword()));
-        if(member.isPresent())  return null; //없으면 null
-        else return Optional.ofNullable(member.get()); //있으면 member 리턴
+        if(member.isPresent())  return null;
+        else return Optional.ofNullable(member.get());
     }
 }

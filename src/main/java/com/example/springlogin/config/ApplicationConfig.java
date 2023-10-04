@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConfig {
     @Bean
-    MemberController memberCookieController(MemberService memberService) { // 빈으로 만들어 주겠다
+    MemberController memberCookieController(MemberService memberService) {
 
-        return new MemberCookieController(memberService); // @Bean 리턴하는 값을 스프링의 빈 컨테이너에 넣겠다
+        return new MemberCookieController(memberService);
     }
 }
