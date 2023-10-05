@@ -13,16 +13,21 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
-    public void join(JoinParam param){
+    public void join(JoinParam param) {
 
         Optional<Member> tmpMember = memberRepository.findByEmail(param.getEmail());
-        if(tmpMember.isPresent()) throw new RuntimeException("이미 존재하는 이메일입니다.");
+        if (tmpMember.isPresent()) throw new RuntimeException("이미 존재하는 이메일입니다.");
 
         Member member = new Member(param.getEmail(), param.getPassword());
         memberRepository.save(member);
     }
 
-    public Optional<Member> login(LoginParam param){
+    public Optional<Member> login(LoginParam param) {
         return memberRepository.findByEmailAndPassword(param.getEmail(), param.getPassword());
+    }
+
+    @Override
+    public Optional<Member> getLoginUserById(Long id) {
+        return memberRepository.findById(id);
     }
 }
