@@ -8,8 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MemberServiceTest {
@@ -95,6 +94,23 @@ class MemberServiceTest {
 
         //then
         assertFalse(member.isPresent());
+    }
+
+    @Test
+    void 회원가입_성공(){
+        String mail = "test2@gmail.com";
+        String password = "1234";
+
+        JoinParam param = JoinParam.builder()
+                .email(mail)
+                .password(password)
+                .build();
+
+        //아무 오류도 반환하지 않으면 회원가입 성공!
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            memberService.join(param);
+        });
+
     }
 
 }
