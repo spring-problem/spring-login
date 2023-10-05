@@ -95,6 +95,53 @@ class MemberServiceTest {
         //then
         assertFalse(member.isPresent());
     }
+    @Test
+    void 회원_저장_확인() {
+        // given
+        String email1 = "jun@naver.com";
+        String pass1 = "12345678";
+
+        Member originMember = new Member(email1, pass1);
+
+        JoinParam joinParam = JoinParam.builder()
+                .email(email1)
+                .password(pass1)
+                .build();
+
+        memberService.join(joinParam);
+
+        LoginParam loginParam = LoginParam.builder()
+                .email(email1)
+                .password(pass1)
+                .build();
+
+        // when
+        // 로그인 성공시에 DB에서 전달해주는 객체를 비교해준다 ->
+        Optional<Member> tmpMember = memberService.login(loginParam);
+
+        // then
+        assertTrue(tmpMember.isPresent());
+    }
+
+    @Test
+    void 비밀번호_최소길이() {
+        // given
+        String email1 = "jun@naver.com";
+        String pass1 = "123";
+
+        JoinParam joinParam = JoinParam.builder()
+                .email(email1)
+                .password(pass1)
+                .build();
+        // when
+        memberService.join(joinParam);
+
+        // then
+        int size = joinParam.getPassword().length();
+        boolean check = (size >= 4) ? true : false;
+
+        assertFalse(check);
+    }
 
     @Test
     void 회원가입_성공(){
