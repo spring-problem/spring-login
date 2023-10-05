@@ -10,22 +10,43 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MemberCookieController implements MemberController {
 
-
     private final MemberService memberService;
+    private final String loginCookieName = "userId";
+
+    @Override
+    public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (loginCookieName.equals(cookie.getName())) {
+                    model.addAttribute("loginByCookie", true);
+                    String userId = cookie.getValue();
+                    Optional<Member> findUser = memberService.getLoginUserById(Long.parseLong(userId));
+                    if (findUser.isEmpty()) {
+                        throw new RuntimeException("유저가 존재하지 않습니다.");
+                    }
+                    model.addAttribute("email", findUser.get().getEmail());
+                }
+            }
+        }
+
+        return "index";
+    }
 
     @Override
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        model.addAttribute(LoginRequest.builder().build());
         Cookie[] cookies = request.getCookies();
 
-        if(cookies != null) {
-            for(Cookie cookie : cookies) {
-                if("loginByCookie".equals(cookie.getName())) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (loginCookieName.equals(cookie.getName())) {
                     return "redirect:/";
                 }
             }
@@ -42,18 +63,19 @@ public class MemberCookieController implements MemberController {
 
         Optional<Member> member = memberService.login(loginParam);
         if (member.isPresent()) {
-            Cookie cookie = new Cookie("loginByCookie", member.get().getEmail());
+            Cookie cookie = new Cookie(loginCookieName, member.get().getId().toString());
             response.addCookie(cookie);
             return "redirect:/";
         }
-        return "redirect:/login";
+        return "/login";
     }
 
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = new Cookie("loginByCookie", null);
+        Cookie cookie = new Cookie(loginCookieName, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         return "redirect:/";
     }
+
 }
