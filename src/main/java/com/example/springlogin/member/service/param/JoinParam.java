@@ -1,11 +1,13 @@
-package com.example.springlogin.member.service;
+package com.example.springlogin.member.service.param;
+
 
 import lombok.Builder;
 import lombok.Data;
 
+
 @Data
 @Builder
-public class LoginParam {
+public class JoinParam {
     private String email;
     private String password;
 }

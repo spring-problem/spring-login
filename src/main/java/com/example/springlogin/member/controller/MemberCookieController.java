@@ -1,8 +1,9 @@
 package com.example.springlogin.member.controller;
 
+import com.example.springlogin.member.controller.request.LoginRequest;
 import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.service.LoginParam;
 import com.example.springlogin.member.service.MemberService;
+import com.example.springlogin.member.service.param.LoginParam;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
