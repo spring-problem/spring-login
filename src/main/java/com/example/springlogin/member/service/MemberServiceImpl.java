@@ -2,6 +2,8 @@ package com.example.springlogin.member.service;
 
 import com.example.springlogin.member.domain.Member;
 import com.example.springlogin.member.repository.MemberRepository;
+import com.example.springlogin.member.service.param.JoinParam;
+import com.example.springlogin.member.service.param.LoginParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
