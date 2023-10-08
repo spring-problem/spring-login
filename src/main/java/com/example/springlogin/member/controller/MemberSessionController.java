@@ -29,7 +29,10 @@ public class MemberSessionController implements MemberController {
             model.addAttribute("loginByCookie", true);
 
             Member member = (Member) session.getAttribute("loginBySession");
-            model.addAttribute("email", member.getEmail());
+            String userId = String.valueOf(member.getId());
+
+            Optional<Member> findUser = memberService.getLoginUserById(Long.parseLong(userId));
+            model.addAttribute("email", findUser.get().getEmail());
         }
 
         return "index";
