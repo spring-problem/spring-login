@@ -25,10 +25,8 @@ public class MemberSessionController implements MemberController{
 
         if(session != null){
             String id = (String) session.getAttribute("loginBySession");
-            if(id != null){
-                Optional<Member> user = service.getLoginUserById(Long.parseLong(id));
-                model.addAttribute("email", user.get().getEmail().toString());
-            }
+            Optional<Member> user = service.getLoginUserById(Long.parseLong(id));
+            model.addAttribute("email", user.get().getEmail().toString());
         }
         return "index";
     }
@@ -71,8 +69,8 @@ public class MemberSessionController implements MemberController{
     @Override
     public String getJoinPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("joinRequest", JoinRequest.builder().build());
-        HttpSession session = request.getSession();
-        if(session.getAttribute("loginBySession") != null){
+        HttpSession session = request.getSession(false);
+        if(session != null && session.getAttribute("loginBySession") != null){
             return "redirect:/";
         }
         return "join";
