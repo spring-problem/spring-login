@@ -45,7 +45,6 @@ public class MemberSessionController implements MemberController {
         // 이미 로그인이 되어있는 경우
         if (session.getAttribute("loginBySession") != null){
             return "redirect:/";
-
         }
 
         return "/login";
@@ -74,7 +73,7 @@ public class MemberSessionController implements MemberController {
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         // 한 브라우저에는 하나의 세션만 존재가 가능하기에 -> 그냥 이름 없이 가져올수 있는건가?
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         session.invalidate();
         return "redirect:/";
     }
@@ -82,7 +81,11 @@ public class MemberSessionController implements MemberController {
     @Override
     public String getJoinPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute(JoinRequest.builder().build());
-        return "join";
+        HttpSession session = request.getSession();
+        if (session.getAttribute("loginBySession") != null){
+            return "join";
+        }
+        return "redirect:/";
     }
 
     @Override
