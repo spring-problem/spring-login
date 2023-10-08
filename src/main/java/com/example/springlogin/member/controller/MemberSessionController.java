@@ -1,7 +1,11 @@
 package com.example.springlogin.member.controller;
 
+import com.example.springlogin.member.controller.request.JoinRequest;
+import com.example.springlogin.member.controller.request.LoginRequest;
 import com.example.springlogin.member.domain.Member;
 import com.example.springlogin.member.service.MemberService;
+import com.example.springlogin.member.service.param.JoinParam;
+import com.example.springlogin.member.service.param.LoginParam;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,14 +19,30 @@ import java.util.Optional;
 public class MemberSessionController implements MemberController {
 
     private final MemberService memberService;
+
+    @Override
+    public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        // 여기서 서버에서 준 쿠키 번호가 생기겠다 !
+        HttpSession session = request.getSession();
+
+        if(session.getAttribute("loginBySession") != null) {
+            model.addAttribute("loginByCookie", true);
+
+            Member member = (Member) session.getAttribute("loginBySession");
+            model.addAttribute("email", member.getEmail());
+        }
+
+        return "index";
+    }
+
     @Override
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         HttpSession session = request.getSession();
 
         // 이미 로그인이 되어있는 경우
-        if (session != null && session.getAttribute("loginBySession") != null){
-            // 현재 getHomePage가 쿠키로 설정이 되어있어서 애매하다 !
+        if (session.getAttribute("loginBySession") != null){
             return "redirect:/";
+
         }
 
         return "/login";
@@ -51,8 +71,25 @@ public class MemberSessionController implements MemberController {
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         // 한 브라우저에는 하나의 세션만 존재가 가능하기에 -> 그냥 이름 없이 가져올수 있는건가?
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         session.invalidate();
+        return "redirect:/";
+    }
+
+    @Override
+    public String getJoinPage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        model.addAttribute(JoinRequest.builder().build());
+        return "join";
+    }
+
+    @Override
+    public String join(JoinRequest joinRequest, HttpServletRequest request, HttpServletResponse response) {
+        JoinParam param = JoinParam.builder()
+                .email(joinRequest.getEmail())
+                .password(joinRequest.getPassword())
+                .build();
+
+        memberService.join(param);
         return "redirect:/";
     }
 }
