@@ -95,6 +95,6 @@ public class MemberCookieController implements MemberController {
                 .build();
 
         memberService.join(param);
-        return "index";
+        return "redirect:/";
     }
 }
