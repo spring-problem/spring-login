@@ -33,4 +33,8 @@ public class JwtTest {
         System.out.println("token = " + token);
     }
 
+    Claims createClaims() {
+        return Jwts.claims();
+    }
+
 }
