@@ -14,3 +14,6 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.security: debug
 
+jwt:
+  secret: secretKey
+  token-validity-in-seconds: 60*60 #만료시간?
