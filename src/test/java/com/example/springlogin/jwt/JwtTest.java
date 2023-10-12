@@ -60,4 +60,15 @@ public class JwtTest {
         return map;
     }
 
+    @Test
+    void Provider_토큰_확인() {
+        Member member = new Member("test@naver.com", "password");
+        ReflectionTestUtils.setField(member, "id", 1L);
+
+        TokenProvider tokenProvider = new TokenProvider();
+        String token = tokenProvider.generateToken(member);
+
+        System.out.println(token);
+    }
+
 }
