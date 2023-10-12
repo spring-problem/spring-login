@@ -19,11 +19,10 @@ public class TokenProvider {
     private String secret;
     private long expireTime;
 
-    TokenProvider(@Value("${jwt.secret}") String secret,
-                  @Value("${jwt.token-validity-in-seconds}") long expireTime){
+    public TokenProvider(@Value("${jwt.secret}") String secret,
+                         @Value("${jwt.token-validity-in-seconds}") String expireTime){
         this.secret = Base64.getEncoder().encodeToString(secret.getBytes());
-        this.expireTime = expireTime;
-
+        this.expireTime = Long.parseLong(expireTime);
     }
 
     public String generateToken(Member member) {
