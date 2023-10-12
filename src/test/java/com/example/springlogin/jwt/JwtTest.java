@@ -1,8 +1,8 @@
 package com.example.springlogin.jwt;
 
+import com.example.springlogin.global.util.TokenProvider;
 import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,15 @@ import java.util.Map;
 
 @SpringBootTest
 public class JwtTest {
+
+
+    @Test
+    void TokenProvider_사용_토큰_생성() {
+        Member member = new Member("test@naver.com", "password");
+        ReflectionTestUtils.setField(member, "id", 1L);
+        TokenProvider provider = new TokenProvider();
+        provider.generateToken(member);
+    }
 
     @Test
     void jwt_토큰_생성() {
