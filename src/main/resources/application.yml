@@ -14,3 +14,6 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.security: debug
 
+jwt:
+  secret: SSAFY
+  tokenValidTime: 60 * 1000

@@ -1,10 +1,10 @@
 package com.example.springlogin.global.util;
 
-import com.example.springlogin.config.JwtConfig;
 import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Base64;
 import java.util.Date;
@@ -12,12 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TokenProvider {
-    private String screct;
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.tokenValidTime}")
     private long tokenValidTime;
-    public TokenProvider() {
-        this.screct = Base64.getEncoder().encodeToString(JwtConfig.getSecret().getBytes());
-        this.tokenValidTime = JwtConfig.getTokenValidTime();
-    }
     private Map<String, Object> map;
     private Claims claims;
     private String token;
@@ -28,7 +26,7 @@ public class TokenProvider {
         token = Jwts.builder()
                 .setHeader(map)
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS256, screct)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
 
         return token;
