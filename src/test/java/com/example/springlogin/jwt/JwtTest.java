@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -17,13 +18,19 @@ import java.util.Map;
 @SpringBootTest
 public class JwtTest {
 
+    private final TokenProvider provider;
+
+    @Autowired
+    public JwtTest(TokenProvider provider) {
+        this.provider = provider;
+    }
 
     @Test
     void TokenProvider_사용_토큰_생성() {
         Member member = new Member("test@naver.com", "password");
         ReflectionTestUtils.setField(member, "id", 1L);
-        TokenProvider provider = new TokenProvider();
-        provider.generateToken(member);
+        String token = provider.generateToken(member);
+        System.out.println(token);
     }
 
     @Test
@@ -39,6 +46,8 @@ public class JwtTest {
                 .compact();
         System.out.println(secret);
         System.out.println("token = " + token);
+
+
     }
 
     Claims createClaims(Long id) {
@@ -59,16 +68,4 @@ public class JwtTest {
 
         return map;
     }
-
-    @Test
-    void Provider_토큰_확인() {
-        Member member = new Member("test@naver.com", "password");
-        ReflectionTestUtils.setField(member, "id", 1L);
-
-        TokenProvider tokenProvider = new TokenProvider();
-        String token = tokenProvider.generateToken(member);
-
-        System.out.println(token);
-    }
-
 }

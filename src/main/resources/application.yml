@@ -16,4 +16,4 @@ logging:
 
 jwt:
   secret: SSAFY
-  tokenValidTime: 60 * 1000
+  tokenValidTime: 600000
