@@ -15,5 +15,5 @@ logging:
     org.springframework.security: debug
 
 jwt:
-  secret: secretKey
+  secret: thisIsMySecretKeyMadeByJuhyunSon
   token-validity-in-seconds: 3600
