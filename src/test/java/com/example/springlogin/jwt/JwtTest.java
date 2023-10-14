@@ -64,7 +64,7 @@ public class JwtTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put("alg" , alg);
-        map.put("typ" , typ);
+        //map.put("typ" , typ);
 
         return map;
     }
