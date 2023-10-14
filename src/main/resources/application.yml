@@ -15,5 +15,6 @@ logging:
     org.springframework.security: debug
 
 jwt:
-  secret: SSAFY
-  tokenValidTime: 600000
+  secret: iamjunyoungmyfavoritecoloriskakiandmymyfavoritefoodishamberger
+  tokenValidSecond: 60 # 60 * 1000
+
