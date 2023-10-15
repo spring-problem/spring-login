@@ -14,10 +14,10 @@ import java.util.Map;
 
 @Component
 public class TokenProvider {
-    private final String alg = "HS256";
+    private final SignatureAlgorithm alg = SignatureAlgorithm.valueOf("HS256");
     private final String typ = "JWT";
-    private String secret;
-    private long expireTime;
+    private final String secret;
+    private final long expireTime;
 
     public TokenProvider(@Value("${jwt.secret}") String secret,
                          @Value("${jwt.token-validity-in-seconds}") String expireTime){
@@ -28,7 +28,7 @@ public class TokenProvider {
     public String generateToken(Member member) {
         String token = Jwts.builder()
                 .setHeader(createHeader())
-                .setClaims(createClaims(member.getId()))
+                .setSubject(String.valueOf(member.getId()))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
 
