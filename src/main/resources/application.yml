@@ -14,3 +14,7 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.security: debug
 
+jwt:
+  secret: iamjunyoungmyfavoritecoloriskakiandmymyfavoritefoodishamberger
+  tokenValidSecond: 60 # 60 * 1000
+
