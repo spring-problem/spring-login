@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Component
 public class TokenProvider {
-    private final SignatureAlgorithm alg = SignatureAlgorithm.valueOf("HS256");
+    private final SignatureAlgorithm alg = SignatureAlgorithm.HS256;
     private final String typ = "JWT";
     private final SecretKey secret;
     private final long expireTimeMilliSecond;
@@ -31,7 +31,7 @@ public class TokenProvider {
         String token = Jwts.builder()
                 .setHeader(createHeader())
                 .setClaims(createClaims(member.getId()))
-                .signWith(secret, SignatureAlgorithm.HS256)
+                .signWith(secret, alg)
                 .compact();
         return token;
     }
