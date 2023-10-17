@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConfig {
     @Bean
-    MemberController memberCookieController(MemberService memberService) {
+    MemberController memberController(MemberService memberService) {
         return new MemberSessionController(memberService);
     }
 }
