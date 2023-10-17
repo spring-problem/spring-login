@@ -17,3 +17,8 @@ logging:
 jwt:
   secret: dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=
   token-validity-in-seconds: 3600
+
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
