@@ -1,9 +1,8 @@
 package com.example.springlogin.global.util;
 
+import com.example.springlogin.global.exception.AuthException;
 import com.example.springlogin.member.domain.Member;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,7 @@ public class TokenProvider {
     private final long expireTimeMilliSecond;
 
     public TokenProvider(@Value("${jwt.secret}") String secret,
-                         @Value("${jwt.token-validity-in-seconds}") String expireTime){
+                         @Value("${jwt.token-validity-in-seconds}") String expireTime) {
         this.secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.expireTimeMilliSecond = Long.parseLong(expireTime) * 1000;
     }
@@ -46,8 +45,20 @@ public class TokenProvider {
 
     Map<String, Object> createHeader() {
         Map<String, Object> map = new HashMap<>();
-        map.put("alg" , alg);
-        map.put("typ" , typ);
+        map.put("alg", alg);
+        map.put("typ", typ);
         return map;
+    }
+
+    public Jws<Claims> getClaims(String token) {
+        JwtParser parser = Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build();
+        try {
+            return parser.parseClaimsJws(token);
+        } catch (SignatureException | ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
+                 IllegalArgumentException e) {
+            throw new AuthException(e);
+        }
     }
 }
