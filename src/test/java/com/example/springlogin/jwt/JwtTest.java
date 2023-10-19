@@ -18,6 +18,10 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.assertj.core.api.Assertions;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class JwtTest {
@@ -81,7 +85,7 @@ public class JwtTest {
         String result = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
 
         // 설정한 PK 값 가져온다 !
-        System.out.println(result);
+        assertThat(result).isEqualTo("1");
     }
 
     @Test
@@ -94,7 +98,7 @@ public class JwtTest {
         String secret =  "dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=";
 
         Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-        System.out.println(!claims.getBody().getExpiration().before(new Date()));
+        assertTrue(!claims.getBody().getExpiration().before(new Date()));
     }
 
 }
