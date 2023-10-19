@@ -3,17 +3,25 @@ package com.example.springlogin.jwt;
 import com.example.springlogin.global.util.TokenProvider;
 import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import org.assertj.core.api.Assertions;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class JwtTest {
@@ -64,6 +72,33 @@ public class JwtTest {
         map.put("typ" , typ);
 
         return map;
+    }
+
+    @Test
+    public void 토큰_payload값_가져오기(){
+        Member member = new Member("test@naver.com", "password");
+        ReflectionTestUtils.setField(member, "id", 1L);
+        String token = provider.generateToken(member);
+
+        String secret =  "dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=";
+
+        String result = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+
+        // 설정한 PK 값 가져온다 !
+        assertThat(result).isEqualTo("1");
+    }
+
+    @Test
+    public void 토큰_검증() {
+        // 클라이언트가 보내온 토큰값 !
+        Member member = new Member("test@naver.com", "password");
+        ReflectionTestUtils.setField(member, "id", 1L);
+        String token = provider.generateToken(member);
+
+        String secret =  "dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=";
+
+        Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+        assertTrue(!claims.getBody().getExpiration().before(new Date()));
     }
 
 }
