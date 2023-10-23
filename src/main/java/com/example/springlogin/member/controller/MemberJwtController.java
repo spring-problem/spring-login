@@ -25,7 +25,6 @@ public class MemberJwtController implements MemberController {
 
     private final String authCookieName = "jwt";
 
-
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
         Cookie[] cookies = request.getCookies();
@@ -82,7 +81,10 @@ public class MemberJwtController implements MemberController {
 
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        return "index";
+        Cookie cookie = new Cookie(authCookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 
     @Override
