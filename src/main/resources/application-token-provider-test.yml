@@ -1,0 +1,3 @@
+jwt:
+  secret: dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=
+  token-validity-in-seconds: 1
