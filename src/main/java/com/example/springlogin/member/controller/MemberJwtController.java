@@ -36,7 +36,6 @@ public class MemberJwtController implements MemberController {
             if (!authCookieName.equals(cookie.getName())) {
                 continue;
             }
-            model.addAttribute("loginByJwt", true);
             String token = cookie.getValue();
 
             Jws<Claims> claims = tokenProvider.getClaims(token);
@@ -45,6 +44,8 @@ public class MemberJwtController implements MemberController {
             if (loginUser.isEmpty()) {
                 break;
             }
+
+            model.addAttribute("loginByJwt", true);
             model.addAttribute("email", loginUser.get().getEmail());
         }
         return "index";
@@ -52,6 +53,12 @@ public class MemberJwtController implements MemberController {
 
     @Override
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Optional<Cookie> authCookie = getAuthCookie(request);
+
+        if (authCookie.isPresent()) {
+            return "redirect:/";
+        }
+
         LoginRequest loginRequest = LoginRequest.builder().build();
         model.addAttribute(loginRequest);
         return "login";
@@ -81,10 +88,14 @@ public class MemberJwtController implements MemberController {
 
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Cookie cookie = new Cookie(authCookieName, null);
+        expireCookie(response, authCookieName);
+        return "redirect:/";
+    }
+
+    private void expireCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-        return "redirect:/";
     }
 
     @Override
@@ -104,5 +115,16 @@ public class MemberJwtController implements MemberController {
         memberService.join(joinParam);
 
         return "redirect:/";
+    }
+
+    Optional<Cookie> getAuthCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (!authCookieName.equals(cookie.getName())) {
+                continue;
+            }
+            return Optional.of(cookie);
+        }
+        return Optional.empty();
     }
 }
