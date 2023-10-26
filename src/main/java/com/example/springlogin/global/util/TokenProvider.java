@@ -5,23 +5,21 @@ import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class TokenProvider {
     private final SignatureAlgorithm alg = SignatureAlgorithm.HS256;
     private final String typ = "JWT";
     private final SecretKey secret;
     private final long expireTimeMilliSecond;
 
-    public TokenProvider(@Value("${jwt.secret}") String secret,
-                         @Value("${jwt.token-validity-in-seconds}") String expireTime) {
+    public TokenProvider(String secret,
+                         String expireTime
+    ) {
         this.secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         this.expireTimeMilliSecond = Long.parseLong(expireTime) * 1000;
     }
