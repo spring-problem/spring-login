@@ -23,7 +23,7 @@ public class MemberJwtController implements MemberController {
     private final MemberService memberService;
     private final TokenProvider tokenProvider;
 
-    private final String authCookieName = "jwt";
+    private final String authCookieName;
 
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {

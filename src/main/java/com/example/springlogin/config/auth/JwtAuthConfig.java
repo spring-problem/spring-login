@@ -16,9 +16,10 @@ public class JwtAuthConfig {
     @Bean
     MemberController memberController(
             MemberService memberService,
-            TokenProvider tokenProvider
+            TokenProvider tokenProvider,
+            @Value("${auth.jwt.access-cookie-key}") String authCookieName
     ) {
-        return new MemberJwtController(memberService, tokenProvider);
+        return new MemberJwtController(memberService, tokenProvider, authCookieName);
     }
 
     @Bean
