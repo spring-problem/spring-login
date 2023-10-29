@@ -18,6 +18,10 @@ jwt:
   secret: dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=
   token-validity-in-seconds: 3600
 
+auth:
+  jwt:
+    access-cookie-key: jwt
+
 server:
   servlet:
     session:
