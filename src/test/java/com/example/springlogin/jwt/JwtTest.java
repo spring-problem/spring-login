@@ -1,6 +1,6 @@
 package com.example.springlogin.jwt;
 
-import com.example.springlogin.global.exception.AuthException;
+import com.example.springlogin.global.exception.JwtParsingFailException;
 import com.example.springlogin.global.util.TokenProvider;
 import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.Claims;
@@ -85,12 +85,12 @@ public class JwtTest {
 
         //signature 변경
         Assertions.assertThatThrownBy(() -> provider.getClaims(token + "123"))
-                        .isInstanceOf(AuthException.class);
+                .isInstanceOf(JwtParsingFailException.class);
 
         //토큰 만료
         Thread.sleep(1500L);
         Assertions.assertThatThrownBy(() -> provider.getClaims(token))
-                .isInstanceOf(AuthException.class);
+                .isInstanceOf(JwtParsingFailException.class);
     }
 
 }
