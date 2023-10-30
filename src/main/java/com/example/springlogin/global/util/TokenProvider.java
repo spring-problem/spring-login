@@ -1,6 +1,6 @@
 package com.example.springlogin.global.util;
 
-import com.example.springlogin.global.exception.AuthException;
+import com.example.springlogin.global.exception.JwtParsingFailException;
 import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -56,7 +56,7 @@ public class TokenProvider {
             return parser.parseClaimsJws(token);
         } catch (SignatureException | ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
                  IllegalArgumentException e) {
-            throw new AuthException(e);
+            throw new JwtParsingFailException(e);
         }
     }
 }
