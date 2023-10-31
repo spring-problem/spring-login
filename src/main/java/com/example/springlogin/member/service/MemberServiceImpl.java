@@ -1,5 +1,6 @@
 package com.example.springlogin.member.service;
 
+import com.example.springlogin.global.exception.EntityAlreadyExistException;
 import com.example.springlogin.member.domain.Member;
 import com.example.springlogin.member.repository.MemberRepository;
 import com.example.springlogin.member.service.param.JoinParam;
@@ -18,7 +19,7 @@ public class MemberServiceImpl implements MemberService {
     public void join(JoinParam param) {
 
         Optional<Member> tmpMember = memberRepository.findByEmail(param.getEmail());
-        if (tmpMember.isPresent()) throw new RuntimeException("이미 존재하는 이메일입니다.");
+        if (tmpMember.isPresent()) throw new EntityAlreadyExistException("이미 존재하는 이메일입니다.");
 
         Member member = new Member(param.getEmail(), param.getPassword());
         memberRepository.save(member);
