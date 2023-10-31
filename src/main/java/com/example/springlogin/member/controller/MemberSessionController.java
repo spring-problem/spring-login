@@ -25,12 +25,12 @@ public class MemberSessionController implements MemberController {
 
         if (session != null) {
             String id = (String) session.getAttribute("loginBySession");
-            model.addAttribute("loginBySession", true);
             if(id == null) return "index";
             Optional<Member> user = service.getLoginUserById(Long.parseLong(id));
             if (user.isEmpty()) {
                 throw new RuntimeException("유저가 존재하지 않습니다.");
             }
+            model.addAttribute("loginBySession", true);
             model.addAttribute("email", user.get().getEmail());
         }
         return "index";
