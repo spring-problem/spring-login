@@ -29,10 +29,11 @@ public class JwtAuthConfig {
         return new TokenProvider(secret, expireTime);
     }
 
-    @Bean
-    FilterRegistrationBean<Filter> filterRegistrationBean() {
-        FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
-        return bean;
-    }
+//    @Bean
+//    FilterRegistrationBean<Filter> filterRegistrationBean() {
+//        FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
+//        return bean;
+//    }
+    //bean.setFilter 가 필요하다 !
 
 }
