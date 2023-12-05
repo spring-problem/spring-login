@@ -20,7 +20,7 @@ public class ApplicationConfig {
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void init() {
-        Member admin = new Member("admin@a.com", "admin");
+        Member admin = Member.createAdmin("admin@a.com", "admin");
         memberRepository.save(admin);
     }
 }

@@ -16,10 +16,29 @@ public class Member {
     private String email;
     private String password;
 
+    private Role role;
+
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }
+
+    public static Member createMember(String email, String password) {
+        Member member = new Member();
+        member.email = email;
+        member.password = password;
+        member.role = Role.MEMBER;
+        return member;
+    }
+
+    public static Member createAdmin(String email, String password) {
+        Member member = new Member();
+        member.email = email;
+        member.password = password;
+        member.role = Role.ADMIN;
+        return member;
+    }
+
 
     public String getEmail() {
         return email;
