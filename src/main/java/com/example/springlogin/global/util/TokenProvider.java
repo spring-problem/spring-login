@@ -59,4 +59,14 @@ public class TokenProvider {
             throw new JwtParsingFailException(e);
         }
     }
+
+    public boolean isValidToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return !claims.getExpiration().before(new Date());
+    }
 }
