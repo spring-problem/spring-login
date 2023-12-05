@@ -119,6 +119,10 @@ public class MemberJwtController implements MemberController {
 
     Optional<Cookie> getAuthCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return Optional.empty();
+        }
+
         for (Cookie cookie : cookies) {
             if (!authCookieName.equals(cookie.getName())) {
                 continue;
