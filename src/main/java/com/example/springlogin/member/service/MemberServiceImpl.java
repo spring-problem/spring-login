@@ -21,7 +21,7 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> tmpMember = memberRepository.findByEmail(param.getEmail());
         if (tmpMember.isPresent()) throw new EntityAlreadyExistException("이미 존재하는 이메일입니다.");
 
-        Member member = new Member(param.getEmail(), param.getPassword());
+        Member member = Member.createMember(param.getEmail(), param.getPassword());
         memberRepository.save(member);
     }
 

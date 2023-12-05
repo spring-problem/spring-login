@@ -31,14 +31,14 @@ public class JwtTest {
 
     @Test
     void TokenProvider_사용_토큰_생성() {
-        Member member = new Member("test@naver.com", "password");
+        Member member = Member.createMember("test@naver.com", "password");
         ReflectionTestUtils.setField(member, "id", 1L);
         System.out.println(provider.generateToken(member));
     }
 
     @Test
     void jwt_토큰_생성() {
-        Member member = new Member("test@naver.com", "password");
+        Member member = Member.createMember("test@naver.com", "password");
         ReflectionTestUtils.setField(member, "id", 1L);
 
         String secret = Base64.getEncoder().encodeToString("asdfasdfdasf".getBytes());
@@ -74,7 +74,7 @@ public class JwtTest {
     void TokenProvider_validate_메서드_테스트() throws InterruptedException {
         //given
 
-        Member member = new Member("test@naver.com", "password");
+        Member member = Member.createMember("test@naver.com", "password");
         ReflectionTestUtils.setField(member, "id", 1L);
 
         //when
