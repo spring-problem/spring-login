@@ -30,5 +30,6 @@ public interface MemberController {
 
     @PostMapping("/join")
     String join(@ModelAttribute JoinRequest joinRequest, HttpServletRequest request, HttpServletResponse response);
-
+    @GetMapping("/members")
+    String getMembersPage(HttpServletRequest request, HttpServletResponse response, Model model);
 }

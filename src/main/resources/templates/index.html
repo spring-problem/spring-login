@@ -22,7 +22,12 @@
     <li>
         <a th:href="@{/join}">회원가입 페이지</a>
     </li>
-    <li>
+
+    <!-- Display only when logged in -->
+    <li th:if="${loginByJwt}">
+        <a th:href="@{/members}">회원 목록</a>
+    </li>
+    <li th:if="${loginByJwt}">
         <form th:action="@{/logout}" method="post">
             <button type="submit">로그아웃</button>
         </form>

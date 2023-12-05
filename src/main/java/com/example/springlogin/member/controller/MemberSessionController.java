@@ -1,5 +1,6 @@
 package com.example.springlogin.member.controller;
 
+import com.example.springlogin.global.exception.NotImplementedException;
 import com.example.springlogin.member.controller.request.JoinRequest;
 import com.example.springlogin.member.controller.request.LoginRequest;
 import com.example.springlogin.member.domain.Member;
@@ -90,5 +91,11 @@ public class MemberSessionController implements MemberController {
 
         service.join(param);
         return "redirect:/";
+    }
+
+    @Override
+    public String getMembersPage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        throw new NotImplementedException("미구현");
+//        return null;
     }
 }
