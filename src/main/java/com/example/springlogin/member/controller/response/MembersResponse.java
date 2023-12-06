@@ -8,16 +8,19 @@ import lombok.Data;
 import java.util.List;
 
 @Data
+@Builder
 public class MembersResponse {
     private Long id;
     private String email;
     private String password;
     private Role role;
 
-    public void changeToResponse(Member member) {
-        id = member.getId();
-        email = member.getEmail();
-        password = member.getPassword();
-        role = member.getRole();
+    public static MembersResponse changeToResponse(Member member) {
+        return MembersResponse.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .password(member.getPassword())
+                .role(member.getRole())
+                .build();
     }
 }
