@@ -24,10 +24,10 @@
     </li>
 
     <!-- Display only when logged in -->
-    <li th:if="${loginByJwt}">
+    <li th:if="${loginByJwt} or ${loginBySession} or ${loginByCookie}">
         <a th:href="@{/members}">회원 목록</a>
     </li>
-    <li th:if="${loginByJwt}">
+    <li th:if="${loginByJwt} or ${loginBySession} or ${loginByCookie}">
         <form th:action="@{/logout}" method="post">
             <button type="submit">로그아웃</button>
         </form>
