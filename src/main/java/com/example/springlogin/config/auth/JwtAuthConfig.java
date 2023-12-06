@@ -2,6 +2,7 @@ package com.example.springlogin.config.auth;
 
 import com.example.springlogin.global.filter.AuthFilter;
 import com.example.springlogin.global.util.TokenProvider;
+import com.example.springlogin.global.util.auth.AuthUtil;
 import com.example.springlogin.global.util.auth.JwtAuthUtil;
 import com.example.springlogin.member.controller.MemberController;
 import com.example.springlogin.member.controller.MemberJwtController;
@@ -35,17 +36,23 @@ public class JwtAuthConfig {
     }
 
     @Bean
-    FilterRegistrationBean<Filter> authFilter(
+    JwtAuthUtil authUtil(
             @Value("${auth.jwt.access-cookie-key}") String authCookieName,
-            TokenProvider tokenProvider,
-            MemberService memberService
+            TokenProvider tokenProvider
     ) {
-        FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
-
-        JwtAuthUtil authUtil = new JwtAuthUtil(
+        return new JwtAuthUtil(
                 authCookieName,
                 tokenProvider
         );
+    }
+
+    @Bean
+    FilterRegistrationBean<Filter> authFilter(
+            MemberService memberService,
+            AuthUtil authUtil
+    ) {
+        FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
+
         AuthFilter filter = new AuthFilter(
                 authUtil,
                 memberService
