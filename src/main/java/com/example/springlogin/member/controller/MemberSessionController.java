@@ -1,8 +1,8 @@
 package com.example.springlogin.member.controller;
 
-import com.example.springlogin.global.exception.NotImplementedException;
 import com.example.springlogin.member.controller.request.JoinRequest;
 import com.example.springlogin.member.controller.request.LoginRequest;
+import com.example.springlogin.member.controller.response.MembersResponse;
 import com.example.springlogin.member.domain.Member;
 import com.example.springlogin.member.service.MemberService;
 import com.example.springlogin.member.service.param.JoinParam;
@@ -14,11 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MemberSessionController implements MemberController {
-    private final MemberService service;
+    private final MemberService memberService;
 
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -27,7 +29,7 @@ public class MemberSessionController implements MemberController {
         if (session != null) {
             String id = (String) session.getAttribute("loginBySession");
             if(id == null) return "index";
-            Optional<Member> user = service.getLoginUserById(Long.parseLong(id));
+            Optional<Member> user = memberService.getLoginUserById(Long.parseLong(id));
             if (user.isEmpty()) {
                 throw new RuntimeException("유저가 존재하지 않습니다.");
             }
@@ -54,7 +56,7 @@ public class MemberSessionController implements MemberController {
                 .password(loginRequest.getPassword())
                 .build();
 
-        Optional<Member> member = service.login(param);
+        Optional<Member> member = memberService.login(param);
         if (member.isPresent()) {
             HttpSession session = request.getSession();
             session.setAttribute("loginBySession", member.get().getId().toString());
@@ -89,13 +91,20 @@ public class MemberSessionController implements MemberController {
                 .password(joinRequest.getPassword())
                 .build();
 
-        service.join(param);
+        memberService.join(param);
         return "redirect:/";
     }
 
     @Override
     public String getMembersPage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        throw new NotImplementedException("미구현");
-//        return null;
+        List<Member> list = memberService.getAllMembers();
+        List<MembersResponse> members = new ArrayList<>();
+        for (Member tmp : list) {
+            MembersResponse membersResponse = MembersResponse.changeToResponse(tmp);
+            members.add(membersResponse);
+        }
+        model.addAttribute("members", members);
+        return "members";
+
     }
 }
