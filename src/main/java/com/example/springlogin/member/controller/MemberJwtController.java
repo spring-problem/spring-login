@@ -3,6 +3,7 @@ package com.example.springlogin.member.controller;
 import com.example.springlogin.global.util.TokenProvider;
 import com.example.springlogin.member.controller.request.JoinRequest;
 import com.example.springlogin.member.controller.request.LoginRequest;
+import com.example.springlogin.member.controller.response.MembersResponse;
 import com.example.springlogin.member.domain.Member;
 import com.example.springlogin.member.domain.Role;
 import com.example.springlogin.member.service.MemberService;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -158,9 +160,17 @@ public class MemberJwtController implements MemberController {
         }
 
         List<Member> list = memberService.getAllMembers();
-        model.addAttribute("members", list);
-        System.out.println("안녕");
-        System.out.println(list.get(0).toString());
+        List<MembersResponse> members = new ArrayList<>();
+        for (Member cmp : list) {
+            MembersResponse membersResponse = new MembersResponse();
+            membersResponse.setId(cmp.getId());
+            membersResponse.setEmail(cmp.getEmail());
+            membersResponse.setPassword(cmp.getPassword());
+            membersResponse.setRole(cmp.getRole());
+            members.add(membersResponse);
+        }
+
+        model.addAttribute("members", members);
         return "members";
     }
 }
