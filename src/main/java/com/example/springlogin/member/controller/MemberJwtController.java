@@ -162,8 +162,7 @@ public class MemberJwtController implements MemberController {
         List<Member> list = memberService.getAllMembers();
         List<MembersResponse> members = new ArrayList<>();
         for (Member tmp : list) {
-            MembersResponse membersResponse = new MembersResponse();
-            membersResponse.changeToResponse(tmp);
+            MembersResponse membersResponse = MembersResponse.changeToResponse(tmp);
             members.add(membersResponse);
         }
 
