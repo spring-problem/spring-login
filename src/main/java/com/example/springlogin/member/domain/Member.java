@@ -1,8 +1,6 @@
 package com.example.springlogin.member.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +16,7 @@ public class Member {
     private String email;
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public static Member createMember(String email, String password) {
