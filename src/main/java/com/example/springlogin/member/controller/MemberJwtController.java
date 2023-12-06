@@ -5,7 +5,6 @@ import com.example.springlogin.member.controller.request.JoinRequest;
 import com.example.springlogin.member.controller.request.LoginRequest;
 import com.example.springlogin.member.controller.response.MembersResponse;
 import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.domain.Role;
 import com.example.springlogin.member.service.MemberService;
 import com.example.springlogin.member.service.param.JoinParam;
 import com.example.springlogin.member.service.param.LoginParam;
@@ -137,28 +136,6 @@ public class MemberJwtController implements MemberController {
     }
 
     public String getMembersPage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        // 1 토큰이 유효할때  아니면 ? throw 던지고
-        Optional<Cookie> cookie = getAuthCookie(request);
-        // 토큰이 없을때 체크
-        if(cookie.isEmpty()) { throw new RuntimeException("토큰이 존재하지 않음");}
-
-        String token = cookie.get().getValue();
-
-        Jws<Claims> claims = tokenProvider.getClaims(token);
-        Long memberId = Long.parseLong(claims.getBody().getSubject());
-//        System.out.println("claims = " + claims);
-
-//        System.out.println("token = " + token);
-//        System.out.println(token.get().getValue());
-        // 2 권한이 admin 일때 아니면 ?
-
-        Optional<Member> member = memberService.getLoginUserById(memberId);
-        if(member.isEmpty()) { throw new RuntimeException("해당 하는 PK 값이 존재하지 않습니다."); }
-
-        if(!member.get().getRole().equals(Role.ADMIN)) {
-            throw new RuntimeException("관리자 권한이 없습니다.");
-        }
-
         List<Member> list = memberService.getAllMembers();
         List<MembersResponse> members = new ArrayList<>();
         for (Member tmp : list) {
