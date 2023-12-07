@@ -19,8 +19,9 @@ import java.util.List;
 @Configuration
 public class CookieAuthConfig {
     @Bean
-    MemberController memberController(MemberService memberService) {
-        return new MemberCookieController(memberService);
+    MemberController memberController(MemberService memberService,
+                                      @Value("${cookie.loginCookieName}") String loginCookieName) {
+        return new MemberCookieController(memberService, loginCookieName);
     }
 
     @Bean
