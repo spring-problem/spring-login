@@ -3,6 +3,7 @@ package com.example.springlogin.member.controller;
 import com.example.springlogin.global.exception.NotImplementedException;
 import com.example.springlogin.member.controller.request.JoinRequest;
 import com.example.springlogin.member.controller.request.LoginRequest;
+import com.example.springlogin.member.controller.response.MembersResponse;
 import com.example.springlogin.member.domain.Member;
 import com.example.springlogin.member.service.MemberService;
 import com.example.springlogin.member.service.param.JoinParam;
@@ -14,13 +15,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class MemberCookieController implements MemberController {
 
     private final MemberService memberService;
-    private final String loginCookieName = "userId";
+    private final String loginCookieName;
 
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -101,7 +104,14 @@ public class MemberCookieController implements MemberController {
 
     @Override
     public String getMembersPage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        throw new NotImplementedException("미구현");
-//        return null;
+        List<Member> list = memberService.getAllMembers();
+        List<MembersResponse> members = new ArrayList<>();
+        for (Member tmp : list) {
+            MembersResponse membersResponse = MembersResponse.changeToResponse(tmp);
+            members.add(membersResponse);
+        }
+
+        model.addAttribute("members", members);
+        return "members";
     }
 }
