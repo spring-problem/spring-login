@@ -1,5 +1,7 @@
 package com.example.springlogin.member.controller;
 
+import com.example.springlogin.auth.service.AuthService;
+import com.example.springlogin.auth.service.param.GenerateRefreshTokenParam;
 import com.example.springlogin.global.util.TokenProvider;
 import com.example.springlogin.member.controller.request.JoinRequest;
 import com.example.springlogin.member.controller.request.LoginRequest;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class MemberJwtController implements MemberController {
 
     private final MemberService memberService;
+    private final AuthService authService;
     private final TokenProvider tokenProvider;
 
     private final String authCookieName;
@@ -91,6 +94,12 @@ public class MemberJwtController implements MemberController {
         Cookie refreshCookie = new Cookie(refreshCookieName, refreshToken);
         response.addCookie(refreshCookie);
 
+        GenerateRefreshTokenParam param = new GenerateRefreshTokenParam();
+        param.setMemberId(loginMember.getId());
+        param.setToken(refreshToken);
+        authService.generateRefreshToken(param);
+
+
         return "redirect:/";
     }
 
@@ -98,6 +107,13 @@ public class MemberJwtController implements MemberController {
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         expireCookie(response, authCookieName);
         expireCookie(response, refreshCookieName);
+
+        Optional<Cookie> authCookie = getAuthCookie(request);
+        Jws<Claims> claims = tokenProvider.getClaims(authCookie.get().getValue());
+
+        GenerateRefreshTokenParam param = new GenerateRefreshTokenParam();
+        param.setMemberId(Long.valueOf(claims.getBody().getSubject()));
+        authService.deleteRefreshToken(param);
         return "redirect:/";
     }
 

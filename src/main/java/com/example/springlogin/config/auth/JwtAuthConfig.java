@@ -22,11 +22,13 @@ public class JwtAuthConfig {
     @Bean
     MemberController memberController(
             MemberService memberService,
+            AuthService authService,
             TokenProvider tokenProvider,
             @Value("${auth.jwt.access-cookie-key}") String accessCookieName,
             @Value("${auth.jwt.refresh-cookie-key}") String refreshCookieName
     ) {
         return new MemberJwtController(memberService,
+                authService,
                 tokenProvider,
                 accessCookieName,
                 refreshCookieName
