@@ -23,12 +23,13 @@ public class JwtAuthConfig {
     MemberController memberController(
             MemberService memberService,
             TokenProvider tokenProvider,
-            @Value("${auth.jwt.access-cookie-key}") String authCookieName
+            @Value("${auth.jwt.access-cookie-key}") String accessCookieName,
+            @Value("${auth.jwt.refresh-cookie-key}") String refreshCookieName
     ) {
         return new MemberJwtController(memberService,
                 tokenProvider,
-                authCookieName,
-                "refresh-jwt"
+                accessCookieName,
+                refreshCookieName
         );
     }
 
@@ -41,14 +42,15 @@ public class JwtAuthConfig {
 
     @Bean
     JwtAuthUtil authUtil(
-            @Value("${auth.jwt.access-cookie-key}") String authCookieName,
+            @Value("${auth.jwt.access-cookie-key}") String accessCookieName,
+            @Value("${auth.jwt.refresh-cookie-key}") String refreshCookieName,
             TokenProvider tokenProvider,
             AuthService authService
     ) {
         return new JwtAuthUtil(
-                authCookieName,
+                accessCookieName,
                 tokenProvider,
-                "refresh-jwt",
+                refreshCookieName,
                 authService
         );
     }

@@ -21,6 +21,7 @@ jwt:
 auth:
   jwt:
     access-cookie-key: jwt
+    refresh-cookie-key: refresh-jwt
 
 server:
   servlet:
