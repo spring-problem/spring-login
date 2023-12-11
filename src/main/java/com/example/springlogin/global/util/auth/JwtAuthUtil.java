@@ -44,26 +44,7 @@ public class JwtAuthUtil implements AuthUtil {
                 throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
             }
 
-            Jws<Claims> refreshTokenValue = refreshToken.get();
-
-            // refresh 토큰 유효
-            long memberId = Long.parseLong(refreshTokenValue.getBody().getSubject());
-
-
-            String newAccessToken = tokenProvider.generateToken(memberId);
-            Cookie newAccessTokenCookie = new Cookie(accessCookieName, newAccessToken);
-            response.addCookie(newAccessTokenCookie);
-
-
-            String newRefreshToken = tokenProvider.generateRefreshToken(memberId);
-
-            GenerateRefreshTokenParam generateRefreshTokenParam = new GenerateRefreshTokenParam();
-            generateRefreshTokenParam.setToken(newRefreshToken);
-            generateRefreshTokenParam.setMemberId(memberId);
-            authService.generateRefreshToken(generateRefreshTokenParam);
-
-            Cookie newRefreshTokenCookie = new Cookie(refreshCookieName, newRefreshToken);
-            response.addCookie(newRefreshTokenCookie);
+            addAuthCookies(response, refreshToken.get());
         }
 
         if (accessToken.isEmpty()) {
@@ -72,6 +53,31 @@ public class JwtAuthUtil implements AuthUtil {
         Jws<Claims> accessTokenClaims = accessToken.get();
 
         return Long.parseLong(accessTokenClaims.getBody().getSubject());
+    }
+
+    /**
+     * access 토큰 만료 시, 인증 관련 쿠키 추가
+     */
+    private void addAuthCookies(HttpServletResponse response, Jws<Claims> refreshTokenValue) {
+
+        // refresh 토큰 유효
+        long memberId = Long.parseLong(refreshTokenValue.getBody().getSubject());
+
+
+        String newAccessToken = tokenProvider.generateToken(memberId);
+        Cookie newAccessTokenCookie = new Cookie(accessCookieName, newAccessToken);
+        response.addCookie(newAccessTokenCookie);
+
+
+        String newRefreshToken = tokenProvider.generateRefreshToken(memberId);
+
+        GenerateRefreshTokenParam generateRefreshTokenParam = new GenerateRefreshTokenParam();
+        generateRefreshTokenParam.setToken(newRefreshToken);
+        generateRefreshTokenParam.setMemberId(memberId);
+        authService.generateRefreshToken(generateRefreshTokenParam);
+
+        Cookie newRefreshTokenCookie = new Cookie(refreshCookieName, newRefreshToken);
+        response.addCookie(newRefreshTokenCookie);
     }
 
 
