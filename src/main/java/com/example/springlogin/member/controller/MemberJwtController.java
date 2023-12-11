@@ -97,6 +97,7 @@ public class MemberJwtController implements MemberController {
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         expireCookie(response, authCookieName);
+        expireCookie(response, refreshCookieName);
         return "redirect:/";
     }
 
