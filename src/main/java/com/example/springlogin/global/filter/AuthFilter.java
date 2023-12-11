@@ -23,7 +23,7 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        Long memberId = authUtil.getMemberId(request);
+        Long memberId = authUtil.getMemberId(request, response);
         Optional<Member> loginUserById = memberService.getLoginUserById(memberId);
         if (loginUserById.isEmpty()) {
             throw new RuntimeException("유저가 존재하지 않습니다.");
