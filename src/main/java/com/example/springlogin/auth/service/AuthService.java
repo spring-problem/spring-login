@@ -24,6 +24,7 @@ public class AuthService {
 
     @Transactional(readOnly = false)
     public void generateRefreshToken(GenerateRefreshTokenParam param) {
+        authRepository.아무거나(param.getMemberId());
         Optional<Member> member = memberRepository.findById(param.getMemberId());
         RefreshToken refreshToken = RefreshToken.createRefreshToken(member.get(), param.getToken());
         authRepository.save(refreshToken);
