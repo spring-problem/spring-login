@@ -82,7 +82,7 @@ public class MemberJwtController implements MemberController {
 
         Member loginMember = member.get();
 
-        String token = tokenProvider.generateToken(loginMember);
+        String token = tokenProvider.generateToken(loginMember.getId());
         Cookie cookie = new Cookie(authCookieName, token);
         response.addCookie(cookie);
 

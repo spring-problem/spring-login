@@ -1,7 +1,6 @@
 package com.example.springlogin.global.util;
 
 import com.example.springlogin.global.exception.JwtParsingFailException;
-import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -24,10 +23,10 @@ public class TokenProvider {
         this.expireTimeMilliSecond = Long.parseLong(expireTime) * 1000;
     }
 
-    public String generateToken(Member member) {
+    public String generateToken(Long id) {
         String token = Jwts.builder()
                 .setHeader(createHeader())
-                .setClaims(createClaims(member.getId()))
+                .setClaims(createClaims(id))
                 .signWith(secret, alg)
                 .compact();
         return token;

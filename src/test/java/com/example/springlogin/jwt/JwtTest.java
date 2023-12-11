@@ -33,7 +33,7 @@ public class JwtTest {
     void TokenProvider_사용_토큰_생성() {
         Member member = Member.createMember("test@naver.com", "password");
         ReflectionTestUtils.setField(member, "id", 1L);
-        System.out.println(provider.generateToken(member));
+        System.out.println(provider.generateToken(member.getId()));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class JwtTest {
 
         //when
 
-        String token = provider.generateToken(member);
+        String token = provider.generateToken(member.getId());
 
         //then
 
