@@ -15,6 +15,7 @@ public class TokenProvider {
     private final String typ = "JWT";
     private final SecretKey secret;
     private final long expireTimeMilliSecond;
+    private final long refreshTokenExpireTimeMillSecond = 60 * 60 * 24 * 14;
 
     public TokenProvider(String secret,
                          String expireTime
@@ -26,16 +27,25 @@ public class TokenProvider {
     public String generateToken(Long id) {
         String token = Jwts.builder()
                 .setHeader(createHeader())
-                .setClaims(createClaims(id))
+                .setClaims(createClaims(id, expireTimeMilliSecond))
                 .signWith(secret, alg)
                 .compact();
         return token;
     }
 
-    Claims createClaims(Long id) {
+    public String generateRefreshToken(Long id) {
+        String token = Jwts.builder()
+                .setHeader(createHeader())
+                .setClaims(createClaims(id, refreshTokenExpireTimeMillSecond))
+                .signWith(secret, alg)
+                .compact();
+        return token;
+    }
+
+    Claims createClaims(Long id, long expireTime) {
         Claims claims = Jwts.claims()
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireTimeMilliSecond))
+                .setExpiration(new Date(System.currentTimeMillis() + expireTime))
                 .setSubject(String.valueOf(id));
         return claims;
     }

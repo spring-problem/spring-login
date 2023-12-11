@@ -27,6 +27,7 @@ public class MemberJwtController implements MemberController {
     private final TokenProvider tokenProvider;
 
     private final String authCookieName;
+    private final String refreshCookieName;
 
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -82,9 +83,13 @@ public class MemberJwtController implements MemberController {
 
         Member loginMember = member.get();
 
-        String token = tokenProvider.generateToken(loginMember.getId());
-        Cookie cookie = new Cookie(authCookieName, token);
-        response.addCookie(cookie);
+        String accessToken = tokenProvider.generateToken(loginMember.getId());
+        Cookie accessCookie = new Cookie(authCookieName, accessToken);
+        response.addCookie(accessCookie);
+
+        String refreshToken = tokenProvider.generateRefreshToken(loginMember.getId());
+        Cookie refreshCookie = new Cookie(refreshCookieName, refreshToken);
+        response.addCookie(refreshCookie);
 
         return "redirect:/";
     }

@@ -1,12 +1,9 @@
 package com.example.springlogin.global.util.auth;
 
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.service.MemberService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -14,7 +11,7 @@ public class CookieAuthUtil implements AuthUtil{
     private final String loginCookieName = "userId";
 
     @Override
-    public Long getMemberId(HttpServletRequest request) {
+    public Long getMemberId(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         String userId = null;
         if (cookies != null) {

@@ -1,5 +1,6 @@
 package com.example.springlogin.config.auth;
 
+import com.example.springlogin.auth.service.AuthService;
 import com.example.springlogin.global.filter.AuthFilter;
 import com.example.springlogin.global.util.TokenProvider;
 import com.example.springlogin.global.util.auth.AuthUtil;
@@ -24,13 +25,16 @@ public class JwtAuthConfig {
             TokenProvider tokenProvider,
             @Value("${auth.jwt.access-cookie-key}") String authCookieName
     ) {
-        return new MemberJwtController(memberService, tokenProvider, authCookieName);
+        return new MemberJwtController(memberService,
+                tokenProvider,
+                authCookieName,
+                "refresh-jwt"
+        );
     }
 
     @Bean
-    TokenProvider tokenProvider(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") String expireTime
+    TokenProvider tokenProvider(@Value("${jwt.secret}") String secret,
+                                @Value("${jwt.token-validity-in-seconds}") String expireTime
     ) {
         return new TokenProvider(secret, expireTime);
     }
@@ -38,11 +42,14 @@ public class JwtAuthConfig {
     @Bean
     JwtAuthUtil authUtil(
             @Value("${auth.jwt.access-cookie-key}") String authCookieName,
-            TokenProvider tokenProvider
+            TokenProvider tokenProvider,
+            AuthService authService
     ) {
         return new JwtAuthUtil(
                 authCookieName,
-                tokenProvider
+                tokenProvider,
+                "refresh-jwt",
+                authService
         );
     }
 
