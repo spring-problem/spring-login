@@ -14,20 +14,22 @@ public class TokenProvider {
     private final SignatureAlgorithm alg = SignatureAlgorithm.HS256;
     private final String typ = "JWT";
     private final SecretKey secret;
-    private final long expireTimeMilliSecond;
-    private final long refreshTokenExpireTimeMillSecond = 60 * 60 * 24 * 14;
+    private final long accessTokenExpireTimeMillSecond;
+    private final long refreshTokenExpireTimeMillSecond;
 
     public TokenProvider(String secret,
-                         String expireTime
+                         String accessTokenExpireTime,
+                         String refreshTokenExpireTime
     ) {
         this.secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-        this.expireTimeMilliSecond = Long.parseLong(expireTime) * 1000;
+        this.accessTokenExpireTimeMillSecond = Long.parseLong(accessTokenExpireTime) * 1000;
+        this.refreshTokenExpireTimeMillSecond = Long.parseLong(refreshTokenExpireTime) * 24 * 60 * 60;
     }
 
     public String generateToken(Long id) {
         String token = Jwts.builder()
                 .setHeader(createHeader())
-                .setClaims(createClaims(id, expireTimeMilliSecond))
+                .setClaims(createClaims(id, accessTokenExpireTimeMillSecond))
                 .signWith(secret, alg)
                 .compact();
         return token;

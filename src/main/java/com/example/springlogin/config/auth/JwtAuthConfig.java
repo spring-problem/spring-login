@@ -36,10 +36,15 @@ public class JwtAuthConfig {
     }
 
     @Bean
-    TokenProvider tokenProvider(@Value("${jwt.secret}") String secret,
-                                @Value("${jwt.token-validity-in-seconds}") String expireTime
+    TokenProvider tokenProvider(@Value("${auth.jwt.secret}") String secret,
+                                @Value("${auth.jwt.access-token-validity-in-seconds}") String accessTokenExpireTime,
+                                @Value("${auth.jwt.refresh-token-validity-in-days}") String refreshTokenExpireTime
     ) {
-        return new TokenProvider(secret, expireTime);
+        return new TokenProvider(
+                secret,
+                accessTokenExpireTime,
+                refreshTokenExpireTime
+        );
     }
 
     @Bean
