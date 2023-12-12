@@ -94,14 +94,7 @@ public class JwtAuthUtil implements AuthUtil {
 
 
     private Optional<Jws<Claims>> getClaimFromToken(HttpServletRequest request, String tokenName) {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (!tokenName.equals(cookie.getName())) {
-                continue;
-            }
-            return Optional.ofNullable(tokenProvider.getClaims(cookie.getValue()));
-        }
-        return Optional.empty();
+        return Optional.ofNullable(tokenProvider.getClaims(getToken(request, tokenName)));
     }
 
     private String getToken(HttpServletRequest request, String tokenName) {
