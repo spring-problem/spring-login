@@ -34,13 +34,27 @@ public class JwtAuthUtil implements AuthUtil {
 
         // access 토큰 파싱 중 예외 발생
         try {
-            accessToken = getToken(request, accessCookieName);
+            accessToken = getClaimFromToken(request, accessCookieName);
         } catch (JwtParsingFailException e) {
             log.error("jwt 파싱 에러", e);
 
-            Optional<Jws<Claims>> refreshToken = getToken(request, refreshCookieName);
+            // 가져온 토큰에 error 있는지 확인
+            Optional<Jws<Claims>> refreshToken = getClaimFromToken(request, refreshCookieName);
 
             if (refreshToken.isEmpty()) {
+                throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+            }
+
+            // db 의 refreshToken 과 cookie 와 refreshToken 과 값이 같은지 확인
+            GenerateRefreshTokenParam generateRefreshTokenParam = new GenerateRefreshTokenParam();
+            generateRefreshTokenParam.setMemberId(Long.valueOf(refreshToken.get().getBody().getSubject()));
+            String dbToken = authService.getRefreshToken(generateRefreshTokenParam);
+            // db 에서 가져온 refresh가 비어있으면 에러
+            if(dbToken.isEmpty()) {
+                throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
+            }
+            // db 에서 가져온 refresh가 cookie 의 refresh 랑 다르면 에러
+            if(!dbToken.equals(getToken(request, refreshCookieName))) {
                 throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
             }
 
@@ -79,7 +93,7 @@ public class JwtAuthUtil implements AuthUtil {
     }
 
 
-    private Optional<Jws<Claims>> getToken(HttpServletRequest request, String tokenName) {
+    private Optional<Jws<Claims>> getClaimFromToken(HttpServletRequest request, String tokenName) {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if (!tokenName.equals(cookie.getName())) {
@@ -88,5 +102,16 @@ public class JwtAuthUtil implements AuthUtil {
             return Optional.ofNullable(tokenProvider.getClaims(cookie.getValue()));
         }
         return Optional.empty();
+    }
+
+    private String getToken(HttpServletRequest request, String tokenName) {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (!tokenName.equals(cookie.getName())) {
+                continue;
+            }
+            return cookie.getValue();
+        }
+        return null;
     }
 }
