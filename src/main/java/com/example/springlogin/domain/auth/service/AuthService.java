@@ -24,7 +24,7 @@ public class AuthService {
 
     @Transactional(readOnly = false)
     public void generateRefreshToken(GenerateRefreshTokenParam param) {
-        authRepository.아무거나(param.getMemberId());
+        authRepository.deleteMemberToken(param.getMemberId());
         Optional<Member> member = memberRepository.findById(param.getMemberId());
         RefreshToken refreshToken = RefreshToken.createRefreshToken(member.get(), param.getToken());
         authRepository.save(refreshToken);
@@ -34,7 +34,7 @@ public class AuthService {
     @Transactional(readOnly = false)
     public void deleteRefreshToken(GenerateRefreshTokenParam param) {
         Long memberId = param.getMemberId();
-        authRepository.아무거나(memberId);
+        authRepository.deleteMemberToken(memberId);
 
     }
 }
