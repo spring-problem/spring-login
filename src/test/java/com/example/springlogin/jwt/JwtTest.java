@@ -1,8 +1,11 @@
 package com.example.springlogin.jwt;
 
+import com.example.springlogin.domain.auth.service.AuthService;
+import com.example.springlogin.domain.auth.service.param.GenerateRefreshTokenParam;
 import com.example.springlogin.domain.member.domain.Member;
 import com.example.springlogin.global.exception.JwtParsingFailException;
 import com.example.springlogin.global.util.TokenProvider;
+import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +19,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 @SpringBootTest
 @ActiveProfiles("token-provider-test")
 @AutoConfigureMockMvc
 public class JwtTest {
 
     private final TokenProvider provider;
+    private final AuthService authService;
 
     @Autowired
     MockMvc mvc;
 
     @Autowired
-    public JwtTest(TokenProvider provider) {
+    public JwtTest(TokenProvider provider, AuthService authService) {
         this.provider = provider;
+        this.authService = authService;
     }
 
     @Test
@@ -53,6 +61,38 @@ public class JwtTest {
         String refreshToken = response.getCookie(refreshCookieName).getValue();
     }
 
+    @Test
+    void accessToken_error_발생시_재발급(
+            @Value("${auth.jwt.access-cookie-key}") String accessCookieName,
+            @Value("${auth.jwt.refresh-cookie-key}") String refreshCookieName
+    ) throws Exception {
+        // 만료된 accessToken 과 정상인 refreshToken 을 부여했을때 result 에 정상적인 access 토큰이 발급된다.
+        String sendAccessToken = provider.generateToken(1L) + "abcde";
+        String sendRefreshToken = provider.generateRefreshToken(1L);
+
+        // db 에 refreshToken 저장 해놓기
+        GenerateRefreshTokenParam generateRefreshTokenParam = new GenerateRefreshTokenParam();
+        generateRefreshTokenParam.setMemberId(1L);
+        generateRefreshTokenParam.setToken(sendRefreshToken);
+        authService.generateRefreshToken(generateRefreshTokenParam);
+
+        Thread.sleep(1500L);
+
+        Cookie accessToken = new Cookie(accessCookieName, sendAccessToken);
+        Cookie refreshToken = new Cookie(refreshCookieName, sendRefreshToken);
+
+        Cookie[] cookies = {accessToken, refreshToken};
+
+        MvcResult mvcResult = mvc.perform(
+                MockMvcRequestBuilders.post("/members")
+                        .cookie(cookies)
+        ).andReturn();
+        
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String receivedAccessToken = response.getCookie(accessCookieName).getValue();
+
+        assertNotEquals(sendAccessToken,receivedAccessToken);
+    }
 
     @Test
     void TokenProvider_validate_메서드_테스트() throws InterruptedException {
