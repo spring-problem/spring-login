@@ -12,4 +12,8 @@ public interface AuthRepository extends JpaRepository<RefreshToken, Long> {
     @Modifying
     @Query(value = "delete from RefreshToken where member.id =:member")
     void deleteMemberToken(@Param("member") Long member);
+
+    @Modifying
+    @Query(value = "select token from RefreshToken where member.id =:member")
+    String getMemberToken(@Param("member") Long member);
 }
