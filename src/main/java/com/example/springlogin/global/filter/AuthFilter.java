@@ -1,9 +1,9 @@
 package com.example.springlogin.global.filter;
 
+import com.example.springlogin.domain.member.domain.Member;
+import com.example.springlogin.domain.member.domain.Role;
+import com.example.springlogin.domain.member.service.MemberService;
 import com.example.springlogin.global.util.auth.AuthUtil;
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.domain.Role;
-import com.example.springlogin.member.service.MemberService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

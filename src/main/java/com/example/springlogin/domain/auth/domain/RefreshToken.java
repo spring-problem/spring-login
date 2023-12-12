@@ -1,6 +1,6 @@
-package com.example.springlogin.auth.domain;
+package com.example.springlogin.domain.auth.domain;
 
-import com.example.springlogin.member.domain.Member;
+import com.example.springlogin.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

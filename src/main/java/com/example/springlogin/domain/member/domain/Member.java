@@ -1,4 +1,4 @@
-package com.example.springlogin.member.domain;
+package com.example.springlogin.domain.member.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

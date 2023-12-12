@@ -1,4 +1,4 @@
-package com.example.springlogin.auth.service.param;
+package com.example.springlogin.domain.auth.service.param;
 
 import lombok.Data;
 

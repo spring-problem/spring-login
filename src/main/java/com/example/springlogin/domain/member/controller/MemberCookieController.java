@@ -1,15 +1,15 @@
-package com.example.springlogin.member.controller;
+package com.example.springlogin.domain.member.controller;
 
-import com.example.springlogin.member.controller.request.JoinRequest;
-import com.example.springlogin.member.controller.request.LoginRequest;
-import com.example.springlogin.member.controller.response.MembersResponse;
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.service.MemberService;
-import com.example.springlogin.member.service.param.JoinParam;
-import com.example.springlogin.member.service.param.LoginParam;
+import com.example.springlogin.domain.member.controller.request.JoinRequest;
+import com.example.springlogin.domain.member.controller.request.LoginRequest;
+import com.example.springlogin.domain.member.controller.response.MembersResponse;
+import com.example.springlogin.domain.member.domain.Member;
+import com.example.springlogin.domain.member.service.MemberService;
+import com.example.springlogin.domain.member.service.param.JoinParam;
+import com.example.springlogin.domain.member.service.param.LoginParam;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,47 +19,58 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class MemberSessionController implements MemberController {
+public class MemberCookieController implements MemberController {
+
     private final MemberService memberService;
+    private final String loginCookieName;
 
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        HttpSession session = request.getSession();
+        Cookie[] cookies = request.getCookies();
 
-        if (session != null) {
-            String id = (String) session.getAttribute("loginBySession");
-            if(id == null) return "index";
-            Optional<Member> user = memberService.getLoginUserById(Long.parseLong(id));
-            if (user.isEmpty()) {
-                throw new RuntimeException("유저가 존재하지 않습니다.");
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (loginCookieName.equals(cookie.getName())) {
+                    model.addAttribute("loginByCookie", true);
+                    String userId = cookie.getValue();
+                    Optional<Member> findUser = memberService.getLoginUserById(Long.parseLong(userId));
+                    if (findUser.isEmpty()) {
+                        throw new RuntimeException("유저가 존재하지 않습니다.");
+                    }
+                    model.addAttribute("email", findUser.get().getEmail());
+                }
             }
-            model.addAttribute("loginBySession", true);
-            model.addAttribute("email", user.get().getEmail());
         }
+
         return "index";
     }
 
     @Override
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("loginBySession") != null) {
-            return "redirect:/";
+        model.addAttribute(LoginRequest.builder().build());
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (loginCookieName.equals(cookie.getName())) {
+                    return "redirect:/";
+                }
+            }
         }
         return "/login";
     }
 
     @Override
     public String login(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
-        request.getParameter("loginRequest");
-        LoginParam param = LoginParam.builder()
+        LoginParam loginParam = LoginParam.builder()
                 .email(loginRequest.getEmail())
                 .password(loginRequest.getPassword())
                 .build();
 
-        Optional<Member> member = memberService.login(param);
+        Optional<Member> member = memberService.login(loginParam);
         if (member.isPresent()) {
-            HttpSession session = request.getSession();
-            session.setAttribute("loginBySession", member.get().getId().toString());
+            Cookie cookie = new Cookie(loginCookieName, member.get().getId().toString());
+            response.addCookie(cookie);
             return "redirect:/";
         }
         return "/login";
@@ -67,20 +78,15 @@ public class MemberSessionController implements MemberController {
 
     @Override
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        if (session != null) {
-            session.invalidate();
-        }
+        Cookie cookie = new Cookie(loginCookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
         return "redirect:/";
     }
 
     @Override
     public String getJoinPage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        model.addAttribute("joinRequest", JoinRequest.builder().build());
-        HttpSession session = request.getSession();
-        if (session != null && session.getAttribute("loginBySession") != null) {
-            return "redirect:/";
-        }
+        model.addAttribute(JoinRequest.builder().build());
         return "join";
     }
 
@@ -103,8 +109,8 @@ public class MemberSessionController implements MemberController {
             MembersResponse membersResponse = MembersResponse.changeToResponse(tmp);
             members.add(membersResponse);
         }
+
         model.addAttribute("members", members);
         return "members";
-
     }
 }

@@ -1,8 +1,8 @@
 package com.example.springlogin.config;
 
 import com.example.springlogin.config.auth.JwtAuthConfig;
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.repository.MemberRepository;
+import com.example.springlogin.domain.member.domain.Member;
+import com.example.springlogin.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
