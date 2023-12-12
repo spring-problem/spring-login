@@ -14,12 +14,11 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.security: debug
 
-jwt:
-  secret: dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=
-  token-validity-in-seconds: 3600
-
 auth:
   jwt:
+    secret: dGhpc0lzTXlTZWNyZXRLZXlNYWRlQnlKdWh5dW5Tb24=
+    access-token-validity-in-seconds: 3600
+    refresh-token-validity-in-days: 14
     access-cookie-key: jwt
     refresh-cookie-key: refresh-jwt
 
