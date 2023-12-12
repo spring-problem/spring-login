@@ -37,8 +37,6 @@ public class AuthService {
         authRepository.deleteMemberToken(memberId);
 
     }
-
-    @Transactional(readOnly = false)
     public String getRefreshToken(GenerateRefreshTokenParam param) {
         Long memberId = param.getMemberId();
         return authRepository.getMemberToken(memberId);
