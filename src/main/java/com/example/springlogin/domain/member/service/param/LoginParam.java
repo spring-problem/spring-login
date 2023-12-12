@@ -1,4 +1,4 @@
-package com.example.springlogin.member.service.param;
+package com.example.springlogin.domain.member.service.param;
 
 import lombok.Builder;
 import lombok.Data;

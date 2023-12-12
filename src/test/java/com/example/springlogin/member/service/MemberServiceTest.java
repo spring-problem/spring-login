@@ -1,6 +1,7 @@
 package com.example.springlogin.member.service;
 
-import com.example.springlogin.member.service.param.JoinParam;
+import com.example.springlogin.domain.member.service.MemberService;
+import com.example.springlogin.domain.member.service.param.JoinParam;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

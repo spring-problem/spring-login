@@ -1,10 +1,10 @@
-package com.example.springlogin.auth.service;
+package com.example.springlogin.domain.auth.service;
 
-import com.example.springlogin.auth.domain.RefreshToken;
-import com.example.springlogin.auth.repository.AuthRepository;
-import com.example.springlogin.auth.service.param.GenerateRefreshTokenParam;
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.repository.MemberRepository;
+import com.example.springlogin.domain.auth.domain.RefreshToken;
+import com.example.springlogin.domain.auth.repository.AuthRepository;
+import com.example.springlogin.domain.auth.service.param.GenerateRefreshTokenParam;
+import com.example.springlogin.domain.member.domain.Member;
+import com.example.springlogin.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

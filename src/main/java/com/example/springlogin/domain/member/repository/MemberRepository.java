@@ -1,6 +1,6 @@
-package com.example.springlogin.member.repository;
+package com.example.springlogin.domain.member.repository;
 
-import com.example.springlogin.member.domain.Member;
+import com.example.springlogin.domain.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

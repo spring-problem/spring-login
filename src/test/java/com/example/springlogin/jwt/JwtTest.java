@@ -1,8 +1,8 @@
 package com.example.springlogin.jwt;
 
+import com.example.springlogin.domain.member.domain.Member;
 import com.example.springlogin.global.exception.JwtParsingFailException;
 import com.example.springlogin.global.util.TokenProvider;
-import com.example.springlogin.member.domain.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

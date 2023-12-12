@@ -1,10 +1,10 @@
-package com.example.springlogin.member.service;
+package com.example.springlogin.domain.member.service;
 
+import com.example.springlogin.domain.member.domain.Member;
+import com.example.springlogin.domain.member.repository.MemberRepository;
+import com.example.springlogin.domain.member.service.param.JoinParam;
+import com.example.springlogin.domain.member.service.param.LoginParam;
 import com.example.springlogin.global.exception.EntityAlreadyExistException;
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.repository.MemberRepository;
-import com.example.springlogin.member.service.param.JoinParam;
-import com.example.springlogin.member.service.param.LoginParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

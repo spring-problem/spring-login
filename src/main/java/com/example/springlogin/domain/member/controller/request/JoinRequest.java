@@ -1,10 +1,11 @@
-package com.example.springlogin.member.controller.request;
+package com.example.springlogin.domain.member.controller.request;
 
 import lombok.Builder;
 import lombok.Data;
+
 @Builder
 @Data
-public class LoginRequest {
+public class JoinRequest {
     private String email;
     private String password;
 }

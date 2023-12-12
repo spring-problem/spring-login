@@ -1,7 +1,7 @@
-package com.example.springlogin.member.controller;
+package com.example.springlogin.domain.member.controller;
 
-import com.example.springlogin.member.controller.request.JoinRequest;
-import com.example.springlogin.member.controller.request.LoginRequest;
+import com.example.springlogin.domain.member.controller.request.JoinRequest;
+import com.example.springlogin.domain.member.controller.request.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;

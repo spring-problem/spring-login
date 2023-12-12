@@ -1,15 +1,15 @@
-package com.example.springlogin.member.controller;
+package com.example.springlogin.domain.member.controller;
 
-import com.example.springlogin.auth.service.AuthService;
-import com.example.springlogin.auth.service.param.GenerateRefreshTokenParam;
+import com.example.springlogin.domain.auth.service.AuthService;
+import com.example.springlogin.domain.auth.service.param.GenerateRefreshTokenParam;
+import com.example.springlogin.domain.member.controller.request.JoinRequest;
+import com.example.springlogin.domain.member.controller.request.LoginRequest;
+import com.example.springlogin.domain.member.controller.response.MembersResponse;
+import com.example.springlogin.domain.member.domain.Member;
+import com.example.springlogin.domain.member.service.MemberService;
+import com.example.springlogin.domain.member.service.param.JoinParam;
+import com.example.springlogin.domain.member.service.param.LoginParam;
 import com.example.springlogin.global.util.TokenProvider;
-import com.example.springlogin.member.controller.request.JoinRequest;
-import com.example.springlogin.member.controller.request.LoginRequest;
-import com.example.springlogin.member.controller.response.MembersResponse;
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.service.MemberService;
-import com.example.springlogin.member.service.param.JoinParam;
-import com.example.springlogin.member.service.param.LoginParam;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.http.Cookie;

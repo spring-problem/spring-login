@@ -1,7 +1,7 @@
-package com.example.springlogin.member.controller.response;
+package com.example.springlogin.domain.member.controller.response;
 
-import com.example.springlogin.member.domain.Member;
-import com.example.springlogin.member.domain.Role;
+import com.example.springlogin.domain.member.domain.Member;
+import com.example.springlogin.domain.member.domain.Role;
 import lombok.Data;
 
 @Data

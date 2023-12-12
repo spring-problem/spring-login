@@ -1,6 +1,6 @@
-package com.example.springlogin.auth.repository;
+package com.example.springlogin.domain.auth.repository;
 
-import com.example.springlogin.auth.domain.RefreshToken;
+import com.example.springlogin.domain.auth.domain.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

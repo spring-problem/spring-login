@@ -1,7 +1,7 @@
 package com.example.springlogin.global.util.auth;
 
-import com.example.springlogin.auth.service.AuthService;
-import com.example.springlogin.auth.service.param.GenerateRefreshTokenParam;
+import com.example.springlogin.domain.auth.service.AuthService;
+import com.example.springlogin.domain.auth.service.param.GenerateRefreshTokenParam;
 import com.example.springlogin.global.exception.JwtParsingFailException;
 import com.example.springlogin.global.util.TokenProvider;
 import io.jsonwebtoken.Claims;
