@@ -44,12 +44,9 @@ public class JwtAuthUtil implements AuthUtil {
                 throw new RuntimeException("로그인 정보가 존재하지 않습니다.");
             }
 
-            addAuthCookies(response, refreshToken.get());
+            return addAuthCookies(response, refreshToken.get());
         }
 
-        if (accessToken.isEmpty()) {
-            throw new RuntimeException("멤버 ID가 존재하지 않습니다.");
-        }
         Jws<Claims> accessTokenClaims = accessToken.get();
 
         return Long.parseLong(accessTokenClaims.getBody().getSubject());
@@ -58,10 +55,10 @@ public class JwtAuthUtil implements AuthUtil {
     /**
      * access 토큰 만료 시, 인증 관련 쿠키 추가
      */
-    private void addAuthCookies(HttpServletResponse response, Jws<Claims> refreshTokenValue) {
+    private Long addAuthCookies(HttpServletResponse response, Jws<Claims> refreshTokenValue) {
 
         // refresh 토큰 유효
-        long memberId = Long.parseLong(refreshTokenValue.getBody().getSubject());
+        Long memberId = Long.parseLong(refreshTokenValue.getBody().getSubject());
 
 
         String newAccessToken = tokenProvider.generateToken(memberId);
@@ -78,6 +75,7 @@ public class JwtAuthUtil implements AuthUtil {
 
         Cookie newRefreshTokenCookie = new Cookie(refreshCookieName, newRefreshToken);
         response.addCookie(newRefreshTokenCookie);
+        return memberId;
     }
 
 
