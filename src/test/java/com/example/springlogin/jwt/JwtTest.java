@@ -37,40 +37,6 @@ public class JwtTest {
     }
 
     @Test
-    void jwt_토큰_생성() {
-        Member member = Member.createMember("test@naver.com", "password");
-        ReflectionTestUtils.setField(member, "id", 1L);
-
-        String secret = Base64.getEncoder().encodeToString("asdfasdfdasf".getBytes());
-        String token = Jwts.builder()
-                .setHeader(createHeader())
-                .setClaims(createClaims(member.getId()))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
-        System.out.println(secret);
-        System.out.println("token = " + token);
-    }
-
-    Claims createClaims(Long id) {
-        Claims claims = Jwts.claims()
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000));
-        claims.put("userID", id);
-        return claims;
-    }
-
-    Map<String, Object> createHeader() {
-        String alg = "HS256";
-        String typ = "JWT";
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("alg", alg);
-        map.put("typ", typ);
-
-        return map;
-    }
-
-    @Test
     void TokenProvider_validate_메서드_테스트() throws InterruptedException {
         //given
 
