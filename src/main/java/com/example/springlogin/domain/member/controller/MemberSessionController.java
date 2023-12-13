@@ -7,6 +7,7 @@ import com.example.springlogin.domain.member.domain.Member;
 import com.example.springlogin.domain.member.service.MemberService;
 import com.example.springlogin.domain.member.service.param.JoinParam;
 import com.example.springlogin.domain.member.service.param.LoginParam;
+import com.example.springlogin.global.exception.SessionAuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -21,17 +22,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberSessionController implements MemberController {
     private final MemberService memberService;
+    private final String loginBySession;
 
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
         HttpSession session = request.getSession();
 
         if (session != null) {
-            String id = (String) session.getAttribute("loginBySession");
-            if(id == null) return "index";
+            String id = (String) session.getAttribute(loginBySession);
+            if(id == null) {
+                throw new SessionAuthException(new Throwable("유저가 존재하지 않습니다"));
+            }
+
             Optional<Member> user = memberService.getLoginUserById(Long.parseLong(id));
             if (user.isEmpty()) {
-                throw new RuntimeException("유저가 존재하지 않습니다.");
+                throw new SessionAuthException(new Throwable("탈퇴된 회원입니다."));
             }
             model.addAttribute("loginBySession", true);
             model.addAttribute("email", user.get().getEmail());
@@ -42,7 +47,7 @@ public class MemberSessionController implements MemberController {
     @Override
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         HttpSession session = request.getSession();
-        if (session.getAttribute("loginBySession") != null) {
+        if (session.getAttribute(loginBySession) != null) {
             return "redirect:/";
         }
         return "/login";
@@ -59,7 +64,7 @@ public class MemberSessionController implements MemberController {
         Optional<Member> member = memberService.login(param);
         if (member.isPresent()) {
             HttpSession session = request.getSession();
-            session.setAttribute("loginBySession", member.get().getId().toString());
+            session.setAttribute(loginBySession, member.get().getId().toString());
             return "redirect:/";
         }
         return "/login";
@@ -78,7 +83,7 @@ public class MemberSessionController implements MemberController {
     public String getJoinPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         model.addAttribute("joinRequest", JoinRequest.builder().build());
         HttpSession session = request.getSession();
-        if (session != null && session.getAttribute("loginBySession") != null) {
+        if (session != null && session.getAttribute(loginBySession) != null) {
             return "redirect:/";
         }
         return "join";
