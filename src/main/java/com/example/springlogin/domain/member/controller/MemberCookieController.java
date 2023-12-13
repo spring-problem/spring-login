@@ -7,7 +7,7 @@ import com.example.springlogin.domain.member.domain.Member;
 import com.example.springlogin.domain.member.service.MemberService;
 import com.example.springlogin.domain.member.service.param.JoinParam;
 import com.example.springlogin.domain.member.service.param.LoginParam;
-import com.example.springlogin.global.exception.InCookieNotFoundUser;
+import com.example.springlogin.global.exception.CookieAuthException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +36,7 @@ public class MemberCookieController implements MemberController {
                     String userId = cookie.getValue();
                     Optional<Member> findUser = memberService.getLoginUserById(Long.parseLong(userId));
                     if (findUser.isEmpty()) {
-                        throw new InCookieNotFoundUser(new Throwable("로그인 정보가 존재하지 않습니다"));
+                        throw new CookieAuthException(new Throwable("로그인 정보가 존재하지 않습니다"));
                     }
                     model.addAttribute("email", findUser.get().getEmail());
                 }
