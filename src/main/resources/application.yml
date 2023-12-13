@@ -27,6 +27,8 @@ server:
     session:
       tracking-modes: cookie
 
+session:
+  loginBySession: userIdentify
 
 cookie:
   loginCookieName: userId
