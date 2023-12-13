@@ -3,6 +3,9 @@ package com.example.springlogin.config.auth;
 import com.example.springlogin.domain.member.controller.MemberController;
 import com.example.springlogin.domain.member.controller.MemberCookieController;
 import com.example.springlogin.domain.member.service.MemberService;
+import com.example.springlogin.global.exception.handler.AuthExceptionHandler;
+import com.example.springlogin.global.exception.handler.CookieAuthExceptionHandler;
+import com.example.springlogin.global.exception.handler.JwtAuthExceptionHandler;
 import com.example.springlogin.global.filter.AuthFilter;
 import com.example.springlogin.global.util.auth.AuthUtil;
 import com.example.springlogin.global.util.auth.CookieAuthUtil;
@@ -43,5 +46,10 @@ public class CookieAuthConfig {
         bean.setFilter(filter);
         bean.setUrlPatterns(List.of("/members"));
         return bean;
+    }
+
+    @Bean
+    AuthExceptionHandler authExceptionHandler(@Value("${cookie.loginCookieName}") String loginCookieName) {
+        return new CookieAuthExceptionHandler(loginCookieName);
     }
 }
