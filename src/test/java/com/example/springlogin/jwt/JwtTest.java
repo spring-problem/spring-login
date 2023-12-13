@@ -91,7 +91,7 @@ public class JwtTest {
         MockHttpServletResponse response = mvcResult.getResponse();
         String receivedAccessToken = response.getCookie(accessCookieName).getValue();
 
-        assertNotEquals(sendAccessToken,receivedAccessToken);
+        Assertions.assertThat(sendAccessToken).isNotEqualTo(receivedAccessToken);
     }
 
     @Test
