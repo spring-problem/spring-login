@@ -4,6 +4,8 @@ import com.example.springlogin.domain.auth.service.AuthService;
 import com.example.springlogin.domain.member.controller.MemberController;
 import com.example.springlogin.domain.member.controller.MemberJwtController;
 import com.example.springlogin.domain.member.service.MemberService;
+import com.example.springlogin.global.exception.handler.AuthExceptionHandler;
+import com.example.springlogin.global.exception.handler.JwtAuthExceptionHandler;
 import com.example.springlogin.global.filter.AuthFilter;
 import com.example.springlogin.global.util.TokenProvider;
 import com.example.springlogin.global.util.auth.AuthUtil;
@@ -77,6 +79,17 @@ public class JwtAuthConfig {
         bean.setFilter(filter);
         bean.setUrlPatterns(List.of("/members"));
         return bean;
+    }
+
+    @Bean
+    AuthExceptionHandler authExceptionHandler(
+            @Value("${auth.jwt.access-cookie-key}") String accessCookieName,
+            @Value("${auth.jwt.refresh-cookie-key}") String refreshCookieName
+    ) {
+        return new JwtAuthExceptionHandler(
+                accessCookieName,
+                refreshCookieName
+        );
     }
 
 }
