@@ -21,6 +21,10 @@ auth:
     refresh-token-validity-in-days: 14
     access-cookie-key: jwt
     refresh-cookie-key: refresh-jwt
+  naver:
+    clientId: x
+    clientSecret: x
+    redirectUri: http://localhost:8080/outh
 
 server:
   servlet:

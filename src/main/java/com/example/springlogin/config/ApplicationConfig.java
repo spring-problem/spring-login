@@ -1,6 +1,7 @@
 package com.example.springlogin.config;
 
 import com.example.springlogin.config.auth.JwtAuthConfig;
+import com.example.springlogin.config.auth.OAuthAuthConfig;
 import com.example.springlogin.domain.member.domain.Member;
 import com.example.springlogin.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
-@Import(JwtAuthConfig.class)
+@Import(OAuthAuthConfig.class)
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
