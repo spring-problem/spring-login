@@ -2,24 +2,21 @@ package com.example.springlogin.domain.member.controller;
 
 import com.example.springlogin.domain.member.controller.request.JoinRequest;
 import com.example.springlogin.domain.member.controller.request.LoginRequest;
+import com.example.springlogin.domain.member.controller.request.OAuthRequest;
 import com.example.springlogin.domain.member.service.MemberService;
+import com.example.springlogin.global.util.OAuthUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 @RequiredArgsConstructor
 public class MemberOAuthController implements MemberController{
@@ -28,10 +25,10 @@ public class MemberOAuthController implements MemberController{
     private final String clientSecret;
     private final String redirectUri;
 
+
     @Override
     public String getHomepage(HttpServletRequest request, HttpServletResponse response, Model model) {
-
-
+        // 토큰이 있다면 naver 로 인증 요청 보내본후 결과 받기 !
         return "index";
     }
 
@@ -39,44 +36,17 @@ public class MemberOAuthController implements MemberController{
     @Override
     public String getLoginPage(HttpServletRequest request, HttpServletResponse response, Model model) {
         // 네이버 로그인 화면으로 이동시킨다 https://nid.naver.com/oauth2.0/authorize?response_type=code&
-        String url = "https://nid.naver.com/oauth2.0/authorize?response_type=code";
-        String client_id = "&client_id=" + clientId;
-        String state = null;
-        String redirect_uri = null;
-        try {
-            state = "&state=" + URLEncoder.encode("1234", "UTF-8");
-            redirect_uri = "&redirect_uri=" + URLEncoder.encode(redirectUri, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-
-        String send = "redirect:" + url + client_id + state + redirect_uri;
-
-//        response.sendRedirect(send);
-
-        // 이렇게 보내는데 dispatherServlet 아닌 실제 url 로 가는 이유?
+        String send = OAuthUtil.makeUrlForLogin(clientId, redirectUri);
+        //response.sendRedirect(send);
+        // 이렇게 보내는데 dispatherServlet 아닌 실제 url 로 가는 이유? -> redirect 이기 때문이다
         return send;
     }
 
+
     // 로그인 이후에 redirect 되고 매핑되는 컨트롤러 -> code 를 이용하여 부가적인 정보들과(email, name) refreshToken access token 받아온다
     @GetMapping("outh")
-    public String getResult(HttpServletRequest request, HttpServletResponse response,
-                            @RequestParam("code") String code,
-                            @RequestParam("state") String state,
-                            @RequestParam(name = "error", required = false) String error,
-                            @RequestParam(name = "error_descript",required = false) String error_descript) throws UnsupportedEncodingException {
-        System.out.println("code = " + code);
-        System.out.println("state = " + state);
-        System.out.println("error = " + error);
-        System.out.println("error_descript = " + error_descript);
-
-        System.out.println("JSON 응답을 위한 요청 보낼거야 ~ ");
-        String url = "https://nid.naver.com/oauth2.0/token";
-
-
-        // URL에 파라미터 추가
-        String sendUrl = String.format("%s?grant_type=authorization_code&client_id=%s&client_secret=%s&code=%s&state=%s",
-                url, clientId, clientSecret, code, URLEncoder.encode("1234", "UTF-8"));
+    public String getResult(@ModelAttribute OAuthRequest oAuthRequest, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        String sendUrl = OAuthUtil.makeUrlForToken(oAuthRequest, clientId, clientSecret);
 
         // GET 요청을 보냄
         String responseBody = new RestTemplate().getForObject(sendUrl, String.class);
@@ -110,14 +80,15 @@ public class MemberOAuthController implements MemberController{
         return "redirect:/";
     }
 
-
     @Override
-    public String login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // 네이버로 로그아웃 요청 보내기 ! (토큰 만료 ! )
+
         return null;
     }
 
     @Override
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
         return null;
     }
 
