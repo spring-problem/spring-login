@@ -5,6 +5,8 @@ import com.example.springlogin.domain.member.controller.MemberOAuthController;
 import com.example.springlogin.domain.member.service.MemberService;
 import com.example.springlogin.global.exception.handler.AuthExceptionHandler;
 import com.example.springlogin.global.exception.handler.CookieAuthExceptionHandler;
+import com.example.springlogin.global.exception.handler.OAuthExceptionHanlder;
+import com.example.springlogin.global.util.OAuthUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +22,7 @@ public class OAuthAuthConfig {
     }
 
     @Bean
-    AuthExceptionHandler authExceptionHandler(@Value("${cookie.loginCookieName}") String loginCookieName) {
-        return new CookieAuthExceptionHandler(loginCookieName);
+    AuthExceptionHandler authExceptionHandler() {
+        return new OAuthExceptionHanlder();
     }
 }
